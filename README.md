@@ -1,2 +1,2 @@
 # schemas
-Official DSNP on MRC Schema Source Code
+Official DSNP on Frequency Schema Source Code
