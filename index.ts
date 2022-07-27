@@ -1,8 +1,7 @@
+import { deploy } from "./deploy";
 
-const main = async () => {
-  console.log("Deploy of Schemas Starting...");
-
-  console.log("TODO: Actual Deploy");
+export const main = async () => {
+  await deploy();
 };
 
 main().catch(console.error).finally(process.exit);
