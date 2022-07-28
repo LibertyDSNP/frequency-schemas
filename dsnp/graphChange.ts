@@ -2,16 +2,7 @@ export default {
   type: "record",
   name: "GraphChange",
   fields: [
-    {
-      // Do we need this?
-      name: "announcementType",
-      type: {
-        name: "AnnouncementTypeEnum",
-        type: "fixed",
-        size: 1,
-      },
-      // symbols: ["1"], // No way to force this without being a string
-    },
+    // When converting from Frequency Schema Message to DSNP Announcement, assume announcementType=1
     {
       name: "changeType",
       type: {
