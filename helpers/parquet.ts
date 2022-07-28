@@ -34,5 +34,6 @@ export const transformToParquetjs = (frequencySchema: ParquetModel): [ParquetSch
   );
   const bloomFilters = frequencySchema.map((x) => (x.bloom_filter ? { column: x.name } : null)).filter((x) => !!x);
 
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   return [new ParquetSchema(schema as any), bloomFilters];
 };

@@ -2,12 +2,11 @@ import { ParquetModel } from "../types/frequency";
 
 const broadcast: ParquetModel = [
   {
-    // TODO: Is this needed?
     name: "announcementType",
     column_type: {
       INTEGER: {
-        bit_width: 32,
-        sign: true,
+        bit_width: 16,
+        sign: false,
       },
     },
     compression: "GZIP",
@@ -16,7 +15,7 @@ const broadcast: ParquetModel = [
   {
     name: "contentHash",
     column_type: "BYTE_ARRAY",
-    compression: "GZIP", // TODO: Pick something
+    compression: "GZIP",
     bloom_filter: true,
   },
   {
@@ -27,13 +26,13 @@ const broadcast: ParquetModel = [
         sign: false,
       },
     },
-    compression: "GZIP", // TODO: Pick something
+    compression: "GZIP",
     bloom_filter: true,
   },
   {
     name: "url",
     column_type: "STRING",
-    compression: "GZIP", // TODO: Pick something
+    compression: "GZIP",
     bloom_filter: false,
   },
 ];
