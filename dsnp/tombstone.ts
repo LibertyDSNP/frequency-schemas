@@ -5,8 +5,8 @@ const tombstone: ParquetModel = [
     name: "announcementType",
     column_type: {
       INTEGER: {
-        bit_width: 16,
-        sign: false,
+        bit_width: 32,
+        sign: true,
       },
     },
     compression: "GZIP",
@@ -27,8 +27,8 @@ const tombstone: ParquetModel = [
     name: "targetAnnouncementType",
     column_type: {
       INTEGER: {
-        bit_width: 16,
-        sign: false,
+        bit_width: 32,
+        sign: true,
       },
     },
     compression: "GZIP",
