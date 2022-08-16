@@ -1,6 +1,6 @@
 import { ParquetModel } from "../types/frequency";
 
-const broadcast: ParquetModel = [
+const update: ParquetModel = [
   {
     name: "announcementType",
     column_type: {
@@ -35,6 +35,12 @@ const broadcast: ParquetModel = [
     compression: "GZIP",
     bloom_filter: false,
   },
+  {
+    name: "targetContentHash",
+    column_type: "BYTE_ARRAY",
+    compression: "GZIP",
+    bloom_filter: true,
+  },
 ];
 
-export default broadcast;
+export default update;

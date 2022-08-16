@@ -1,14 +1,15 @@
 import { testCompression, testParquetSchema } from "../helpers/parquet";
 import * as generators from "@dsnp/test-generators";
-import broadcastSchema from "./broadcast";
+import updateSchema from "./update";
 
-describe("Broadcast Spec", () => {
-  testParquetSchema(broadcastSchema);
+describe("Update Spec", () => {
+  testParquetSchema(updateSchema);
 
-  testCompression("broadcast", broadcastSchema, () => ({
-    announcementType: 2,
+  testCompression("update", updateSchema, () => ({
+    announcementType: 6,
     contentHash: generators.generateHash(),
     fromId: generators.randInt(10000000),
+    targetContentHash: generators.generateHash(),
     url: `https://www.imadapp.com/data/posts/${generators.generateHash()}`,
   }));
 });

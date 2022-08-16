@@ -1,6 +1,6 @@
 import { ParquetModel } from "../types/frequency";
 
-const broadcast: ParquetModel = [
+const reply: ParquetModel = [
   {
     name: "announcementType",
     column_type: {
@@ -30,6 +30,12 @@ const broadcast: ParquetModel = [
     bloom_filter: true,
   },
   {
+    name: "inReplyTo",
+    column_type: "STRING",
+    compression: "GZIP",
+    bloom_filter: true,
+  },
+  {
     name: "url",
     column_type: "STRING",
     compression: "GZIP",
@@ -37,4 +43,4 @@ const broadcast: ParquetModel = [
   },
 ];
 
-export default broadcast;
+export default reply;

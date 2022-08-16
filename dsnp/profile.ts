@@ -1,6 +1,6 @@
 import { ParquetModel } from "../types/frequency";
 
-const broadcast: ParquetModel = [
+const profile: ParquetModel = [
   {
     name: "announcementType",
     column_type: {
@@ -37,4 +37,4 @@ const broadcast: ParquetModel = [
   },
 ];
 
-export default broadcast;
+export default profile;

@@ -1,6 +1,6 @@
 import { ParquetModel } from "../types/frequency";
 
-const broadcast: ParquetModel = [
+const tombstone: ParquetModel = [
   {
     name: "announcementType",
     column_type: {
@@ -11,12 +11,6 @@ const broadcast: ParquetModel = [
     },
     compression: "GZIP",
     bloom_filter: false,
-  },
-  {
-    name: "contentHash",
-    column_type: "BYTE_ARRAY",
-    compression: "GZIP",
-    bloom_filter: true,
   },
   {
     name: "fromId",
@@ -30,11 +24,22 @@ const broadcast: ParquetModel = [
     bloom_filter: true,
   },
   {
-    name: "url",
-    column_type: "STRING",
+    name: "targetAnnouncementType",
+    column_type: {
+      INTEGER: {
+        bit_width: 32,
+        sign: true,
+      },
+    },
     compression: "GZIP",
     bloom_filter: false,
   },
+  {
+    name: "targetContentHash",
+    column_type: "BYTE_ARRAY",
+    compression: "GZIP",
+    bloom_filter: true,
+  },
 ];
 
-export default broadcast;
+export default tombstone;

@@ -1,6 +1,6 @@
 import { ParquetModel } from "../types/frequency";
 
-const broadcast: ParquetModel = [
+const reaction: ParquetModel = [
   {
     name: "announcementType",
     column_type: {
@@ -13,10 +13,21 @@ const broadcast: ParquetModel = [
     bloom_filter: false,
   },
   {
-    name: "contentHash",
-    column_type: "BYTE_ARRAY",
+    name: "emoji",
+    column_type: "STRING",
     compression: "GZIP",
     bloom_filter: true,
+  },
+  {
+    name: "apply",
+    column_type: {
+      INTEGER: {
+        bit_width: 8,
+        sign: false,
+      },
+    },
+    compression: "GZIP",
+    bloom_filter: false,
   },
   {
     name: "fromId",
@@ -30,11 +41,11 @@ const broadcast: ParquetModel = [
     bloom_filter: true,
   },
   {
-    name: "url",
+    name: "inReplyTo",
     column_type: "STRING",
     compression: "GZIP",
-    bloom_filter: false,
+    bloom_filter: true,
   },
 ];
 
-export default broadcast;
+export default reaction;
