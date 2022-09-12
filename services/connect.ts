@@ -18,7 +18,7 @@ export type DsnpCallback = (status: ExtrinsicStatus, events: EventRecord[]) => v
 export type DsnpErrorCallback = (error: any) => void;
 
 // DEPLOY_SCHEMA_ENDPOINT_URL (environment variable)
-// The value is a URL for the chain.  e.g. ws://localhost:9944
+// The value is a URL for the RPC endpoint.  e.g. ws://localhost:9944
 let DEPLOY_SCHEMA_ENDPOINT_URL = process.env.DEPLOY_SCHEMA_ENDPOINT_URL;
 if (DEPLOY_SCHEMA_ENDPOINT_URL === undefined) {
   DEPLOY_SCHEMA_ENDPOINT_URL = "ws://localhost:9944";
@@ -43,6 +43,5 @@ export const requireGetServiceKeys = (): KeyringPair => {
   if (DEPLOY_SCHEMA_ACCOUNT_URI === undefined) {
     DEPLOY_SCHEMA_ACCOUNT_URI = "//Alice";
   }
-  //return keyring.addFromUri("//Alice", { name: "Alice default" }, "sr25519");
   return keyring.addFromUri(DEPLOY_SCHEMA_ACCOUNT_URI, {}, "sr25519");
 };
