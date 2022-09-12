@@ -8,34 +8,39 @@ import { EventRecord } from "@polkadot/types/interfaces/system/types";
 /**
  * DsnpCallback represents a type for publication callback function
  */
- export type DsnpCallback = (
-    status: ExtrinsicStatus,
-    events: EventRecord[]
-  ) => void;
-  
-  /**
-   * DsnpErrorCallback represents a type for publication callback function
-   */
-  export type DsnpErrorCallback = (error: any) => void;
+export type DsnpCallback = (status: ExtrinsicStatus, events: EventRecord[]) => void;
 
-  // SCHEMA_CHAIN_HOST (environment variable)
-// The value is a URL for the chain.  e.g. ws://localhost:9944 
-const ChainURL = process.env.DEPLOY_SCHEMAS_CHAIN_HOST;
-//const ChainURL = "ws://localhost:9944";
+/**
+ * DsnpErrorCallback represents a type for publication callback function
+ */
+export type DsnpErrorCallback = (error: any) => void;
 
-const DefaultWsProvider = new WsProvider(ChainURL);
+// DEPLOY_SCHEMA_ENDPOINT_URL (environment variable)
+// The value is a URL for the chain.  e.g. ws://localhost:9944
+let DEPLOY_SCHEMA_ENDPOINT_URL = process.env.DEPLOY_SCHEMA_ENDPOINT_URL;
+if (DEPLOY_SCHEMA_ENDPOINT_URL === undefined) {
+    DEPLOY_SCHEMA_ENDPOINT_URL = "ws://localhost:9944";
+}
 
-  export async function requireGetProviderApi(): Promise<ApiPromise> {
-    const api = await ApiPromise.create({
-      provider: DefaultWsProvider,
-      ...options
-    });
-    return api;
+const DefaultWsProvider = new WsProvider(DEPLOY_SCHEMA_ENDPOINT_URL);
+
+export async function requireGetProviderApi(): Promise<ApiPromise> {
+  const api = await ApiPromise.create({
+    provider: DefaultWsProvider,
+    ...options,
+  });
+  return api;
+}
+
+// DEPLOY_SCHEMA_ACCOUNT_URI (environment variable)
+// The value is a URI for the account.  e.g. //Alice or a mnemonic (seed words)
+export const requireGetServiceKeys = (): KeyringPair => {
+  const keyring = new Keyring();
+
+  let DEPLOY_SCHEMA_ACCOUNT_URI = process.env.DEPLOY_SCHEMA_ACCOUNT_URI;
+  if (DEPLOY_SCHEMA_ACCOUNT_URI === undefined) {
+    DEPLOY_SCHEMA_ACCOUNT_URI = "//Alice";
   }
-
-  export const requireGetServiceKeys = (): KeyringPair => {
-    const keyring = new Keyring();
-  
-    return keyring.addFromUri("//Alice", { name: "Alice default" }, "sr25519");
-  };
-  
+  //return keyring.addFromUri("//Alice", { name: "Alice default" }, "sr25519");
+  return keyring.addFromUri(DEPLOY_SCHEMA_ACCOUNT_URI, { }, "sr25519");
+};

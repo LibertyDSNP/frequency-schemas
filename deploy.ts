@@ -1,4 +1,3 @@
-
 import { ExitStatus } from "typescript";
 import broadcast from "./dsnp/broadcast";
 import graphChange from "./dsnp/graphChange";
@@ -6,57 +5,89 @@ import profile from "./dsnp/profile";
 import reaction from "./dsnp/reaction";
 import reply from "./dsnp/reply";
 import tombstone from "./dsnp/tombstone";
+import { ParquetModel } from "./types/frequency";
 import update from "./dsnp/update";
-import {requireGetProviderApi, requireGetServiceKeys, DsnpCallback, DsnpErrorCallback} from "./services/connect";
+import { requireGetProviderApi, requireGetServiceKeys, DsnpCallback, DsnpErrorCallback } from "./services/connect";
 
 export const deploy = async () => {
   console.log("Deploy of Schemas Starting...");
 
   const args = process.argv.slice(2);
 
-  console.log(args);
+  let schemas:(ParquetModel|object)[] = [];
 
-  let succeeded = () => {
-    console.log("OK");
-  };
-  let failed = () => {
-    console.log("ERROR");
+  // Map schema names (string) to schema object
+  const nameToSchema = new Map<string, (ParquetModel|object)>([
+    ["broadcast", broadcast],
+    ["profile", profile],
+    ["reaction", reaction],
+    ["reply", reply],
+    ["tombstone", tombstone],
+    ["update", update],
+    ["graphChange", graphChange]
+  ]);
+
+  // Process arguments
+  switch (args.length) {
+    case 0:
+      schemas = [broadcast, profile, reaction, reply, tombstone, update, graphChange];
+      break;
+    case 1:
+      let sc = nameToSchema.get(args[0]);
+      if (sc == undefined) {
+        console.error("ERR: No specified schema with name.");
+        process.exit();
+      }
+      else {
+        schemas = [sc];
+      }
+      break;
+    default:
+        console.error("ERR: You can only specify a single schema to register or all schemas if not specified.");
+        process.exit();
+      break;
   }
 
+  const succeeded = () => {
+    console.log("OK");
+  };
+  const failed = () => {
+    console.log("ERROR");
+  };
+
   const api = await requireGetProviderApi();
-  console.log(api.genesisHash.toHex());
-  await registerSchema(succeeded, failed);
+
+  await registerSchema(schemas, succeeded, failed);
 };
 
-const registerSchema = async (callback: DsnpCallback, errorCallback: DsnpErrorCallback) => {
-
-  console.log("registerSchema()");
-
-  console.log("API");
+const registerSchema = async (schemas:(ParquetModel|object)[], callback: DsnpCallback, errorCallback: DsnpErrorCallback) => {
   const api = await requireGetProviderApi();
-  console.dir(api);
-
   const serviceKeys = requireGetServiceKeys();
-  console.log("SERVICE KEYS");
-  console.dir(serviceKeys);
 
-  const schemas = [broadcast, profile, reaction, reply, tombstone, update];
-  
   let extrinsic;
 
   for (const schema of schemas) {
-    extrinsic =  api.tx.schemas.registerSchema(JSON.stringify(schema), 'Parquet' , 'OnChain');
 
-    console.log(extrinsic);
-  
-    await extrinsic?.signAndSend(serviceKeys, {nonce: -1},
-        ({status, events}) => {
+    // Remove whitespace
+    let json = JSON.stringify(schema);
+    let json_no_ws = JSON.stringify(JSON.parse(json));
+
+    // The default model type/payload type is Parquet/IPFS
+    // unless it is a graphChange schema which is AvroBinary/OnChain.
+    if (schema === graphChange) {
+      extrinsic = api.tx.schemas.registerSchema(json_no_ws, "AvroBinary", "OnChain");
+    }
+    else {
+      extrinsic = api.tx.schemas.registerSchema(json_no_ws, "Parquet", "IPFS");
+    }
+    // console.log(extrinsic);
+
+    await extrinsic
+      ?.signAndSend(serviceKeys, { nonce: -1 }, ({ status, events }) => {
         callback(status, events);
-    })
-    .catch((error: any) => {
+      })
+      .catch((error: any) => {
         errorCallback(error);
-    });  
+      });
   }
-
-}
-
+};
