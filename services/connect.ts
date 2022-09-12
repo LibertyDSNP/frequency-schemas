@@ -13,6 +13,8 @@ export type DsnpCallback = (status: ExtrinsicStatus, events: EventRecord[]) => v
 /**
  * DsnpErrorCallback represents a type for publication callback function
  */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type DsnpErrorCallback = (error: any) => void;
 
 // DEPLOY_SCHEMA_ENDPOINT_URL (environment variable)

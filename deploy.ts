@@ -27,12 +27,12 @@ export const deploy = async () => {
   ]);
 
   // Process arguments
+  const sc = nameToSchema.get(args[0]);
   switch (args.length) {
     case 0:
       schemas = [broadcast, profile, reaction, reply, tombstone, update, graphChange];
       break;
     case 1:
-      const sc = nameToSchema.get(args[0]);
       if (sc == undefined) {
         console.error("ERR: No specified schema with name.");
         process.exit();
@@ -78,8 +78,9 @@ const registerSchema = async (
     } else {
       extrinsic = api.tx.schemas.registerSchema(json_no_ws, "Parquet", "IPFS");
     }
-    // console.log(extrinsic);
+    // console.log(extrinsic)
 
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     await extrinsic
       ?.signAndSend(serviceKeys, { nonce: -1 }, ({ status, events }) => {
         callback(status, events);
