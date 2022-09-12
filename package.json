@@ -7,6 +7,7 @@
     "build": "tsc",
     "run": "ts-node index.ts",
     "clean": "rm -Rf dist",
+    "deploy": "node dist/deploy.js",
     "format": "tsc --noEmit --pretty && eslint --fix \"**/*.ts\"",
     "lint": "tsc --noEmit --pretty && eslint \"**/*.ts\""
   },
@@ -21,6 +22,10 @@
   },
   "homepage": "https://github.com/LibertyDSNP/schemas#readme",
   "dependencies": {
+    "@dsnp/frequency-api-augment": "^0.0.0-924aaa",
+    "@polkadot/api": "^9.3.3",
+    "@polkadot/extension-dapp": "^0.44.6",
+    "@polkadot/types": "^9.3.3",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.4"
   },
