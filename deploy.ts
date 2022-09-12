@@ -1,4 +1,3 @@
-import { ExitStatus } from "typescript";
 import broadcast from "./dsnp/broadcast";
 import graphChange from "./dsnp/graphChange";
 import profile from "./dsnp/profile";
@@ -14,7 +13,7 @@ export const deploy = async () => {
 
   const args = process.argv.slice(2);
 
-  let schemas:(ParquetModel|object)[] = [];
+  let schemas:(ParquetModel | object)[] = [];
 
   // Map schema names (string) to schema object
   const nameToSchema = new Map<string, (ParquetModel|object)>([
@@ -33,7 +32,7 @@ export const deploy = async () => {
       schemas = [broadcast, profile, reaction, reply, tombstone, update, graphChange];
       break;
     case 1:
-      let sc = nameToSchema.get(args[0]);
+      const sc = nameToSchema.get(args[0]);
       if (sc == undefined) {
         console.error("ERR: No specified schema with name.");
         process.exit();
@@ -55,12 +54,10 @@ export const deploy = async () => {
     console.log("ERROR");
   };
 
-  const api = await requireGetProviderApi();
-
   await registerSchema(schemas, succeeded, failed);
 };
 
-const registerSchema = async (schemas:(ParquetModel|object)[], callback: DsnpCallback, errorCallback: DsnpErrorCallback) => {
+const registerSchema = async (schemas:(ParquetModel | object)[], callback: DsnpCallback, errorCallback: DsnpErrorCallback) => {
   const api = await requireGetProviderApi();
   const serviceKeys = requireGetServiceKeys();
 
@@ -69,8 +66,8 @@ const registerSchema = async (schemas:(ParquetModel|object)[], callback: DsnpCal
   for (const schema of schemas) {
 
     // Remove whitespace
-    let json = JSON.stringify(schema);
-    let json_no_ws = JSON.stringify(JSON.parse(json));
+    const json = JSON.stringify(schema);
+    const json_no_ws = JSON.stringify(JSON.parse(json));
 
     // The default model type/payload type is Parquet/IPFS
     // unless it is a graphChange schema which is AvroBinary/OnChain.
