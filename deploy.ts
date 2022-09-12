@@ -13,17 +13,17 @@ export const deploy = async () => {
 
   const args = process.argv.slice(2);
 
-  let schemas:(ParquetModel | object)[] = [];
+  let schemas: (ParquetModel | object)[] = [];
 
   // Map schema names (string) to schema object
-  const nameToSchema = new Map<string, (ParquetModel|object)>([
+  const nameToSchema = new Map<string, ParquetModel | object>([
     ["broadcast", broadcast],
     ["profile", profile],
     ["reaction", reaction],
     ["reply", reply],
     ["tombstone", tombstone],
     ["update", update],
-    ["graphChange", graphChange]
+    ["graphChange", graphChange],
   ]);
 
   // Process arguments
@@ -36,14 +36,13 @@ export const deploy = async () => {
       if (sc == undefined) {
         console.error("ERR: No specified schema with name.");
         process.exit();
-      }
-      else {
+      } else {
         schemas = [sc];
       }
       break;
     default:
-        console.error("ERR: You can only specify a single schema to register or all schemas if not specified.");
-        process.exit();
+      console.error("ERR: You can only specify a single schema to register or all schemas if not specified.");
+      process.exit();
       break;
   }
 
@@ -57,14 +56,17 @@ export const deploy = async () => {
   await registerSchema(schemas, succeeded, failed);
 };
 
-const registerSchema = async (schemas:(ParquetModel | object)[], callback: DsnpCallback, errorCallback: DsnpErrorCallback) => {
+const registerSchema = async (
+  schemas: (ParquetModel | object)[],
+  callback: DsnpCallback,
+  errorCallback: DsnpErrorCallback
+) => {
   const api = await requireGetProviderApi();
   const serviceKeys = requireGetServiceKeys();
 
   let extrinsic;
 
   for (const schema of schemas) {
-
     // Remove whitespace
     const json = JSON.stringify(schema);
     const json_no_ws = JSON.stringify(JSON.parse(json));
@@ -73,8 +75,7 @@ const registerSchema = async (schemas:(ParquetModel | object)[], callback: DsnpC
     // unless it is a graphChange schema which is AvroBinary/OnChain.
     if (schema === graphChange) {
       extrinsic = api.tx.schemas.registerSchema(json_no_ws, "AvroBinary", "OnChain");
-    }
-    else {
+    } else {
       extrinsic = api.tx.schemas.registerSchema(json_no_ws, "Parquet", "IPFS");
     }
     // console.log(extrinsic);

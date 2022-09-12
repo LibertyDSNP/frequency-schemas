@@ -19,7 +19,7 @@ export type DsnpErrorCallback = (error: any) => void;
 // The value is a URL for the chain.  e.g. ws://localhost:9944
 let DEPLOY_SCHEMA_ENDPOINT_URL = process.env.DEPLOY_SCHEMA_ENDPOINT_URL;
 if (DEPLOY_SCHEMA_ENDPOINT_URL === undefined) {
-    DEPLOY_SCHEMA_ENDPOINT_URL = "ws://localhost:9944";
+  DEPLOY_SCHEMA_ENDPOINT_URL = "ws://localhost:9944";
 }
 
 const DefaultWsProvider = new WsProvider(DEPLOY_SCHEMA_ENDPOINT_URL);
@@ -42,5 +42,5 @@ export const requireGetServiceKeys = (): KeyringPair => {
     DEPLOY_SCHEMA_ACCOUNT_URI = "//Alice";
   }
   //return keyring.addFromUri("//Alice", { name: "Alice default" }, "sr25519");
-  return keyring.addFromUri(DEPLOY_SCHEMA_ACCOUNT_URI, { }, "sr25519");
+  return keyring.addFromUri(DEPLOY_SCHEMA_ACCOUNT_URI, {}, "sr25519");
 };
