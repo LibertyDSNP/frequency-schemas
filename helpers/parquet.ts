@@ -22,6 +22,7 @@ const convertColumnType = (columnType: FrequencyParquetType): string => {
   throw new Error("Not currently supported in transformation");
 };
 
+// Transform a ParquetModel (an array of ParquetColumn) to a ParquetSchema
 const transformToParquetjs = (frequencySchema: ParquetModel): [ParquetSchema, BloomFilterColumn[]] => {
   const schema = Object.fromEntries(
     frequencySchema.map((column) => {
@@ -35,8 +36,10 @@ const transformToParquetjs = (frequencySchema: ParquetModel): [ParquetSchema, Bl
       ];
     })
   );
-  const bloomFilters = frequencySchema.map((x) => (x.bloom_filter ? { column: x.name } : null)).filter((x) => !!x);
-
+  const bloomFilters = frequencySchema.reduce<BloomFilterColumn[]>((acc, x) => {
+    if (x.bloom_filter) acc.push({ column: x.name });
+    return acc;
+  }, []);
   /* eslint-disable @typescript-eslint/no-explicit-any */
   return [new ParquetSchema(schema as any), bloomFilters];
 };
