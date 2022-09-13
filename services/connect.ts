@@ -31,6 +31,7 @@ export async function requireGetProviderApi(): Promise<ApiPromise> {
     provider: DefaultWsProvider,
     ...options,
   });
+  await api.isReady;
   return api;
 }
 
