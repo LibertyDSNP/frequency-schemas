@@ -19,14 +19,14 @@ export type DsnpErrorCallback = (error: any) => void;
 
 // DEPLOY_SCHEMA_ENDPOINT_URL (environment variable)
 // The value is a URL for the RPC endpoint.  e.g. ws://localhost:9944
-let DEPLOY_SCHEMA_ENDPOINT_URL = process.env.DEPLOY_SCHEMA_ENDPOINT_URL;
-if (DEPLOY_SCHEMA_ENDPOINT_URL === undefined) {
-  DEPLOY_SCHEMA_ENDPOINT_URL = "ws://localhost:9944";
-}
+export async function getFrequencyAPI(): Promise<ApiPromise> {
+  let DEPLOY_SCHEMA_ENDPOINT_URL = process.env.DEPLOY_SCHEMA_ENDPOINT_URL;
+  if (DEPLOY_SCHEMA_ENDPOINT_URL === undefined) {
+    // One would think that localhost would also work here but it doesn't consistently.
+    DEPLOY_SCHEMA_ENDPOINT_URL = "ws://127.0.0.1:9944";
+  }
+  const DefaultWsProvider = new WsProvider(DEPLOY_SCHEMA_ENDPOINT_URL);
 
-const DefaultWsProvider = new WsProvider(DEPLOY_SCHEMA_ENDPOINT_URL);
-
-export async function requireGetProviderApi(): Promise<ApiPromise> {
   const api = await ApiPromise.create({
     provider: DefaultWsProvider,
     ...options,
@@ -37,7 +37,7 @@ export async function requireGetProviderApi(): Promise<ApiPromise> {
 
 // DEPLOY_SCHEMA_ACCOUNT_URI (environment variable)
 // The value is a URI for the account.  e.g. //Alice or a mnemonic (seed words)
-export const requireGetServiceKeys = (): KeyringPair => {
+export const getSignerAccountKeys = (): KeyringPair => {
   const keyring = new Keyring();
 
   let DEPLOY_SCHEMA_ACCOUNT_URI = process.env.DEPLOY_SCHEMA_ACCOUNT_URI;

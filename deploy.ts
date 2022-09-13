@@ -6,7 +6,7 @@ import reply from "./dsnp/reply";
 import tombstone from "./dsnp/tombstone";
 import { ParquetModel } from "./types/frequency";
 import update from "./dsnp/update";
-import { requireGetProviderApi, requireGetServiceKeys } from "./services/connect";
+import { getFrequencyAPI, getSignerAccountKeys } from "./services/connect";
 
 // Map schema names (string) to schema object
 const nameToSchema = new Map<string, ParquetModel | object>([
@@ -48,10 +48,10 @@ export const deploy = async () => {
 };
 
 const registerSchemas = async (schemas: string[]) => {
-  const api = await requireGetProviderApi();
-  const serviceKeys = requireGetServiceKeys();
+  console.log("registerSchemas()");
 
-  let extrinsic;
+  const api = await getFrequencyAPI();
+  const signerAccountKeys = getSignerAccountKeys();
 
   for (const schemaName of schemas) {
     console.log("Registering " + schemaName + " schema.");
@@ -66,13 +66,31 @@ const registerSchemas = async (schemas: string[]) => {
     // The default model type/payload type is Parquet/IPFS
     // unless it is a graphChange schema which is AvroBinary/OnChain.
     if (schemaName === "graphChange") {
-      extrinsic = api.tx.schemas.registerSchema(json_no_ws, "AvroBinary", "OnChain");
+      // Avro
+      const unsub = await api.tx.schemas
+        .registerSchema(json_no_ws, "AvroBinary", "OnChain")
+        .signAndSend(signerAccountKeys, { nonce: -1 }, ({ status, events }) => {
+          console.log(`api.tx.schemas.registerSchema -- Current status is ${status} ${events}`);
+          unsub();
+        });
     } else {
-      extrinsic = api.tx.schemas.registerSchema(json_no_ws, "Parquet", "IPFS");
-    }
-    // console.log(extrinsic)
+      // Parquet
+      const unsub = await api.tx.schemas
+        .registerSchema(json_no_ws, "Parquet", "IPFS")
+        .signAndSend(signerAccountKeys, { nonce: -1 }, ({ status, events }) => {
+          console.log(`Current status is ${status.type}`);
 
-    /* eslint-disable @typescript-eslint/no-explicit-any */
-    await extrinsic?.signAndSend(serviceKeys, { nonce: -1 });
+          if (status.isFinalized) {
+            console.log(`Transaction included at blockHash ${status.asFinalized}`);
+
+            // Loop through Vec<EventRecord> to display all events
+            events.forEach(({ phase, event: { data, method, section } }) => {
+              console.log(`\t' ${phase}: ${section}.${method}:: ${data}`);
+            });
+
+            unsub();
+          }
+        });
+    }
   }
 };
