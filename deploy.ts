@@ -6,6 +6,8 @@ import reply from "./dsnp/reply";
 import tombstone from "./dsnp/tombstone";
 import { ParquetModel } from "./types/frequency";
 import update from "./dsnp/update";
+import type { EventRecord } from "@polkadot/types/interfaces/system";
+
 import { getFrequencyAPI, getSignerAccountKeys } from "./services/connect";
 
 // Map schema names (string) to schema object
@@ -24,37 +26,47 @@ export const deploy = async () => {
 
   const args = process.argv.slice(2);
 
-  let schemas: string[];
+  let schema_names: string[];
 
   // Process arguments
   if (args.length == 0) {
-    schemas = ["broadcast", "profile", "reaction", "reply", "tombstone", "update", "graphChange"];
+    schema_names = ["broadcast", "profile", "reaction", "reply", "tombstone", "update", "graphChange"];
   } else if (args.length == 1) {
     // Does schema with name exist?
     const schemaName = args[0];
     const sc = nameToSchema.get(schemaName);
     if (sc == undefined) {
-      console.error("ERR: No specified schema with name.");
+      console.error("ERROR: No specified schema with name.");
       process.exit(1);
     } else {
-      schemas = [schemaName];
+      schema_names = [schemaName];
     }
   } else {
-    console.error("ERR: You can only specify a single schema to register or all schemas if not specified.");
+    console.error("ERROR: You can only specify a single schema to register or all schemas if not specified.");
     process.exit(1);
   }
 
-  await registerSchemas(schemas);
+  await registerSchemas(schema_names);
 };
 
-const registerSchemas = async (schemas: string[]) => {
-  console.log("registerSchemas()");
+// returns first event
+const eventWithSectionAndMethod = (events: EventRecord[], section: string, method: string) => {
+  const evt = events.find(({ event }) => event.section === section && event.method === method);
+  return evt?.event;
+};
 
+const registerSchemas = async (schema_names: string[]) => {
+  // console.log("registerSchemas()");
+
+  const promises = [];
   const api = await getFrequencyAPI();
   const signerAccountKeys = getSignerAccountKeys();
 
-  for (const schemaName of schemas) {
-    console.log("Registering " + schemaName + " schema.");
+  let nonce = await (await api.rpc.system.accountNextIndex(signerAccountKeys.address)).toNumber();
+  //console.log("nonce=" + nonce);
+
+  for (const schemaName of schema_names) {
+    console.log("Attempting to register " + schemaName + " schema.");
 
     // Get the schema from the name
     const schema = nameToSchema.get(schemaName);
@@ -63,34 +75,50 @@ const registerSchemas = async (schemas: string[]) => {
     // Remove whitespace in the JSON
     const json_no_ws = JSON.stringify(JSON.parse(json));
 
+    let promise;
+
     // The default model type/payload type is Parquet/IPFS
     // unless it is a graphChange schema which is AvroBinary/OnChain.
     if (schemaName === "graphChange") {
       // Avro
-      const unsub = await api.tx.schemas
-        .registerSchema(json_no_ws, "AvroBinary", "OnChain")
-        .signAndSend(signerAccountKeys, { nonce: -1 }, ({ status, events }) => {
-          console.log(`api.tx.schemas.registerSchema -- Current status is ${status} ${events}`);
-          unsub();
-        });
+      promise = new Promise<void>((resolve, reject) => {
+        api.tx.schemas
+          .registerSchema(json_no_ws, "AvroBinary", "OnChain")
+          .signAndSend(signerAccountKeys, { nonce: nonce++ }, ({ status, events, dispatchError }) => {
+            if (dispatchError) {
+              console.log("ERROR: " + dispatchError.toHuman());
+              reject();
+            } else if (status.isInBlock || status.isFinalized) {
+              const evt = eventWithSectionAndMethod(events, "schemas", "SchemaRegistered");
+              if (evt) {
+                const val = evt?.data[1];
+                console.log("SUCCESS: " + schemaName + " schema registered with id of " + val);
+              }
+              resolve();
+            }
+          });
+      });
     } else {
       // Parquet
-      const unsub = await api.tx.schemas
-        .registerSchema(json_no_ws, "Parquet", "IPFS")
-        .signAndSend(signerAccountKeys, { nonce: -1 }, ({ status, events }) => {
-          console.log(`Current status is ${status.type}`);
-
-          if (status.isFinalized) {
-            console.log(`Transaction included at blockHash ${status.asFinalized}`);
-
-            // Loop through Vec<EventRecord> to display all events
-            events.forEach(({ phase, event: { data, method, section } }) => {
-              console.log(`\t' ${phase}: ${section}.${method}:: ${data}`);
-            });
-
-            unsub();
-          }
-        });
+      promise = new Promise<void>((resolve, reject) => {
+        api.tx.schemas
+          .registerSchema(json_no_ws, "Parquet", "IPFS")
+          .signAndSend(signerAccountKeys, { nonce: nonce++ }, ({ status, events, dispatchError }) => {
+            if (dispatchError) {
+              console.log("ERROR: " + dispatchError.toHuman());
+              reject();
+            } else if (status.isInBlock || status.isFinalized) {
+              const evt = eventWithSectionAndMethod(events, "schemas", "SchemaRegistered");
+              if (evt) {
+                const val = evt?.data[1];
+                console.log("SUCCESS: " + schemaName + " schema registered with id of " + val);
+              }
+              resolve();
+            }
+          });
+      });
     }
+    promises.push(promise);
   }
+  return Promise.all(promises);
 };
