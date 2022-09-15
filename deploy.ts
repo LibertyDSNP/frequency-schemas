@@ -24,11 +24,11 @@ const nameToSchema = new Map<string, ParquetModel | object>([
 export const deploy = async () => {
   console.log("Deploy of Schemas Starting...");
 
+  // Process arguments
   const args = process.argv.slice(2);
 
   let schema_names: string[];
 
-  // Process arguments
   if (args.length == 0) {
     schema_names = ["broadcast", "profile", "reaction", "reply", "tombstone", "update", "graphChange"];
   } else if (args.length == 1) {
@@ -49,17 +49,20 @@ export const deploy = async () => {
   await registerSchemas(schema_names);
 };
 
-// returns first event
+// Given a list of events, a section and a method,
+// returns the first event with matching section and method.
 const eventWithSectionAndMethod = (events: EventRecord[], section: string, method: string) => {
   const evt = events.find(({ event }) => event.section === section && event.method === method);
   return evt?.event;
 };
 
+// Given a list of schema names, attempt to register them with the chain.
 const registerSchemas = async (schema_names: string[]) => {
   const promises = [];
   const api = await getFrequencyAPI();
   const signerAccountKeys = getSignerAccountKeys();
 
+  // Retrieve the current account nonce so we can increment it when submitting transactions
   let nonce = (await api.rpc.system.accountNextIndex(signerAccountKeys.address)).toNumber();
 
   for (const schemaName of schema_names) {

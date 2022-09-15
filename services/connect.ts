@@ -13,6 +13,7 @@ export async function getFrequencyAPI(): Promise<ApiPromise> {
   }
   const DefaultWsProvider = new WsProvider(DEPLOY_SCHEMA_ENDPOINT_URL);
 
+  // The "options" parameter pulls in the Frequency API extrinsics
   const api = await ApiPromise.create({
     provider: DefaultWsProvider,
     ...options,
