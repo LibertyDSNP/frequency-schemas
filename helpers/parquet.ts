@@ -40,6 +40,7 @@ const transformToParquetjs = (frequencySchema: ParquetModel): [ParquetSchema, Bl
     if (x.bloom_filter) acc.push({ column: x.name });
     return acc;
   }, []);
+
   /* eslint-disable @typescript-eslint/no-explicit-any */
   return [new ParquetSchema(schema as any), bloomFilters];
 };
