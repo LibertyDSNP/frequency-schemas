@@ -56,14 +56,11 @@ const eventWithSectionAndMethod = (events: EventRecord[], section: string, metho
 };
 
 const registerSchemas = async (schema_names: string[]) => {
-  // console.log("registerSchemas()");
-
   const promises = [];
   const api = await getFrequencyAPI();
   const signerAccountKeys = getSignerAccountKeys();
 
-  let nonce = await (await api.rpc.system.accountNextIndex(signerAccountKeys.address)).toNumber();
-  //console.log("nonce=" + nonce);
+  let nonce = (await api.rpc.system.accountNextIndex(signerAccountKeys.address)).toNumber();
 
   for (const schemaName of schema_names) {
     console.log("Attempting to register " + schemaName + " schema.");

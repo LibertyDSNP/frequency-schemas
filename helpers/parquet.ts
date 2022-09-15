@@ -36,7 +36,6 @@ const transformToParquetjs = (frequencySchema: ParquetModel): [ParquetSchema, Bl
       ];
     })
   );
-  // const bloomFilters = frequencySchema.map((x) => (x.bloom_filter ? { column: x.name } : null)).filter((x) => !!x);
   const bloomFilters = frequencySchema.reduce<BloomFilterColumn[]>((acc, x) => {
     if (x.bloom_filter) acc.push({ column: x.name });
     return acc;
