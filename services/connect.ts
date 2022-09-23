@@ -1,4 +1,4 @@
-import { options } from "@dsnp/frequency-api-augment";
+import { options } from "@frequency-chain/api-augment";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Keyring } from "@polkadot/api";
 import { KeyringPair } from "@polkadot/keyring/types";
