@@ -1,6 +1,10 @@
 # schemas
 Official DSNP on Frequency Schema Source Code
 
+# install
+
+    npm install
+
 # deploy
 To deploy/register all schemas:
 
@@ -15,7 +19,7 @@ Two environment variables allow you to change these defaults:
 
 e.g.
 
-    DEPLOY_SCHEMA_ACCOUNT_URI="//Bob" DEPLOY_SCHEMA_ENDPOINT_URL="ws://localhost:9944" npm run deploy profile
+    DEPLOY_SCHEMA_ACCOUNT_URI="//Bob" DEPLOY_SCHEMA_ENDPOINT_URL="ws://127.0.0.1:9944" npm run deploy profile
 
 To register a single schema:
 
