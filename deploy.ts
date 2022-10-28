@@ -46,7 +46,7 @@ export const deploy = async () => {
     process.exit(1);
   }
 
-  await registerSchemas(schema_names);
+  await createSchemas(schema_names);
 };
 
 // Given a list of events, a section and a method,
@@ -57,7 +57,7 @@ const eventWithSectionAndMethod = (events: EventRecord[], section: string, metho
 };
 
 // Given a list of schema names, attempt to register them with the chain.
-const registerSchemas = async (schema_names: string[]) => {
+const createSchemas = async (schema_names: string[]) => {
   const promises = [];
   const api = await getFrequencyAPI();
   const signerAccountKeys = getSignerAccountKeys();
@@ -83,7 +83,7 @@ const registerSchemas = async (schema_names: string[]) => {
       // Avro
       promise = new Promise<void>((resolve, reject) => {
         api.tx.schemas
-          .registerSchema(json_no_ws, "AvroBinary", "OnChain")
+          .createSchema(json_no_ws, "AvroBinary", "OnChain")
           .signAndSend(signerAccountKeys, { nonce: nonce++ }, ({ status, events, dispatchError }) => {
             if (dispatchError) {
               console.log("ERROR: " + dispatchError.toHuman());
@@ -102,7 +102,7 @@ const registerSchemas = async (schema_names: string[]) => {
       // Parquet
       promise = new Promise<void>((resolve, reject) => {
         api.tx.schemas
-          .registerSchema(json_no_ws, "Parquet", "IPFS")
+          .createSchema(json_no_ws, "Parquet", "IPFS")
           .signAndSend(signerAccountKeys, { nonce: nonce++ }, ({ status, events, dispatchError }) => {
             if (dispatchError) {
               console.log("ERROR: " + dispatchError.toHuman());
