@@ -42,7 +42,7 @@ export const deploy = async () => {
       schema_names = [schemaName];
     }
   } else {
-    console.error("ERROR: You can only specify a single schema to register or all schemas if not specified.");
+    console.error("ERROR: You can only specify a single schema to create or all schemas if not specified.");
     process.exit(1);
   }
 
@@ -56,7 +56,7 @@ const eventWithSectionAndMethod = (events: EventRecord[], section: string, metho
   return evt?.event;
 };
 
-// Given a list of schema names, attempt to register them with the chain.
+// Given a list of schema names, attempt to create them with the chain.
 const createSchemas = async (schema_names: string[]) => {
   const promises = [];
   const api = await getFrequencyAPI();
@@ -66,7 +66,7 @@ const createSchemas = async (schema_names: string[]) => {
   let nonce = (await api.rpc.system.accountNextIndex(signerAccountKeys.address)).toNumber();
 
   for (const schemaName of schema_names) {
-    console.log("Attempting to register " + schemaName + " schema.");
+    console.log("Attempting to create " + schemaName + " schema.");
 
     // Get the schema from the name
     const schema = nameToSchema.get(schemaName);
@@ -89,10 +89,10 @@ const createSchemas = async (schema_names: string[]) => {
               console.log("ERROR: " + dispatchError.toHuman());
               reject();
             } else if (status.isInBlock || status.isFinalized) {
-              const evt = eventWithSectionAndMethod(events, "schemas", "SchemaRegistered");
+              const evt = eventWithSectionAndMethod(events, "schemas", "SchemaCreated");
               if (evt) {
                 const val = evt?.data[1];
-                console.log("SUCCESS: " + schemaName + " schema registered with id of " + val);
+                console.log("SUCCESS: " + schemaName + " schema created with id of " + val);
               }
               resolve();
             }
@@ -108,10 +108,10 @@ const createSchemas = async (schema_names: string[]) => {
               console.log("ERROR: " + dispatchError.toHuman());
               reject();
             } else if (status.isInBlock || status.isFinalized) {
-              const evt = eventWithSectionAndMethod(events, "schemas", "SchemaRegistered");
+              const evt = eventWithSectionAndMethod(events, "schemas", "SchemaCreated");
               if (evt) {
                 const val = evt?.data[1];
-                console.log("SUCCESS: " + schemaName + " schema registered with id of " + val);
+                console.log("SUCCESS: " + schemaName + " schema created with id of " + val);
               }
               resolve();
             }
