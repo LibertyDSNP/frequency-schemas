@@ -35,11 +35,11 @@ const read = async () => {
   console.table(Object.entries(connectionInfo).map(([key, value]) => ({ key, value: value.toString() })));
 
   console.log("\n## Schema Information");
-  const maxSchemaId = await (await api.query.schemas.currentSchemaIdentifierMaximum()).toNumber();
+  const maxSchemaId = (await api.query.schemas.currentSchemaIdentifierMaximum()).toNumber();
   console.log(`There are ${maxSchemaId} schemas on the connected chain.`);
 
   for (let i = 1; i <= maxSchemaId; i++) {
-    const schemaResult = await (await api.rpc.schemas.getBySchemaId(i)).unwrap();
+    const schemaResult = (await api.rpc.schemas.getBySchemaId(i)).unwrap();
     const jsonSchema = Buffer.from(schemaResult.model).toString("utf8");
     const modelParsed = JSON.parse(jsonSchema);
     const { schema_id, model_type, payload_location } = schemaResult;
