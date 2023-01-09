@@ -1,5 +1,6 @@
-# schemas
-Official DSNP on Frequency Schema Source Code
+# Official DSNP on Frequency Schema Source Code
+
+**Matching DSNP Version: v1.2.0-pre**
 
 # install
 

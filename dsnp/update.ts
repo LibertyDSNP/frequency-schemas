@@ -36,6 +36,17 @@ const update: ParquetModel = [
     bloom_filter: false,
   },
   {
+    name: "targetAnnouncementType",
+    column_type: {
+      INTEGER: {
+        bit_width: 32,
+        sign: true,
+      },
+    },
+    compression: "GZIP",
+    bloom_filter: false,
+  },
+  {
     name: "targetContentHash",
     column_type: "BYTE_ARRAY",
     compression: "GZIP",
