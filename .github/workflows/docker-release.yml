@@ -1,7 +1,7 @@
 name: Release Instant Seal Node With Deployed Schemas Docker Image
 on:
   push:
-    tags: [ docker/* ]
+    tags: *
 
 jobs:
   docker-release:
