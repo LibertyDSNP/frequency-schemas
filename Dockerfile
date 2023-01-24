@@ -2,7 +2,7 @@
 # locally in instant seal mode then deploying schemas to that node.
 
 #This pulls the latest instant-seal-node image
-FROM frequencychain/instant-seal-node as frequency-image
+FROM frequencychain/instant-seal-node:v1.0.1 as frequency-image
 
 #Switch to root to install node on image
 USER root
