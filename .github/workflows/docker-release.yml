@@ -21,7 +21,7 @@ jobs:
       - name: Get the tag name
         run: |
           echo ${{ github.ref_name }}
-          echo "TAG=${{ github.ref_name }} | sed -e 's/docker\///g'" >> $GITHUB_ENV
+          echo "TAG=${{ github.ref_name#docker/ }}" >> $GITHUB_ENV
 
       - name: Build and push dsnp/instant-seal-node-with-deployed-schemas
         id: docker_build_instant_seal_node_with_deployed_schemas
