@@ -1,7 +1,7 @@
 name: Release Instant Seal Node With Deployed Schemas Docker Image
 on:
   push:
-    tags: 'docker/*'
+    tags: [ docker/* ]
 
 jobs:
   docker-release:
@@ -20,8 +20,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Get the tag name
         run: |
-          echo ${{ github.ref_name }}
-          echo "TAG=${{ github.ref_name#docker/ }}" >> $GITHUB_ENV
+          echo ${{ github.ref_name##* }}
+          echo "TAG=${{ github.ref_name##* }}" >> $GITHUB_ENV
 
       - name: Build and push dsnp/instant-seal-node-with-deployed-schemas
         id: docker_build_instant_seal_node_with_deployed_schemas
