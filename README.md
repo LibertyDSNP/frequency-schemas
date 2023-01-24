@@ -94,3 +94,22 @@ There are 8 schemas on the connected chain.
 ]
 ...
 ```
+
+# dsnp/instant-seal-node-with-deployed-schemas
+## Pushing Docker Image
+This repo includes a docker image to push an instant-seal-node with the schemas deployed on top of it to docker hub under dsnp/instant-seal-node-with-deployed-schemas.
+To match with the frequency version, a new tag should be pushed to update the docker version of this image each time frequency releases a new version.
+The following steps explain how to properly do a release for this.
+1. Go to the [frequency repo](https://github.com/LibertyDSNP/frequency/releases) to see what the latest release version is.
+2. In this repo, check that main is properly passing its tests and building [here](https://github.com/LibertyDSNP/schemas/actions)
+3. Go to main: `git checkout main && git pull --rebase`
+4. Make sure to pull all latest tags as well: `git pull --tags`
+5. Tag the build to match the frequency version but appended with "docker/": `git tag docker/{insert version number}`. For example, if the version number is v1.0.0, then the tag should be `docker/v1.0.0`
+Push the tag up: `git push --tags`
+6. Monitor the [build](https://github.com/LibertyDSNP/schemas/actions)
+7. When that finishes successfully, check [docker hub](https://hub.docker.com/r/dsnp/instant-seal-node-with-deployed-schemas/tags) to verify that the image was pushed up
+
+## To run locally
+For any local testing do the following:
+1. docker pull dsnp/instant-seal-node-with-deployed-schemas:latest
+2. docker run docker run --rm -p 9944:9944 -p 9933:9933 -p 30333:30333 dsnp/instant-seal-node-with-deployed-schemas:latest
