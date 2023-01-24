@@ -10,12 +10,15 @@ USER root
 LABEL maintainer="Frequency"
 LABEL description="Frequency collator node in instant seal mode with schemas deployed"
 
-RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
+RUN apt-get update \
+    && apt-get install -y ca-certificates \
+    && update-ca-certificates
 
 # Install node-js to base image
-RUN apt-get update && apt-get install -y curl gnupg
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash
-RUN apt-get update && apt-get install -y nodejs
+RUN apt-get update && apt-get install -y curl gnupg \
+        && curl -sL https://deb.nodesource.com/setup_16.x | bash \
+        && apt-get update && apt-get install -y nodejs \
+        && rm -rf /var/lib/apt/lists/*
 
 # Switch back to frequency user
 
@@ -28,6 +31,9 @@ RUN chmod +x ./frequency/deploy_schemas_to_node.sh
 # Copy over schemas repo
 RUN mkdir frequency/schemas
 COPY --chown=frequency ./ ./frequency/schemas
+RUN cd frequency/schemas \
+    && npm install \
+    && cd $WORKSPACE
 
 # Install tini to use as new entrypoint
 ENV TINI_VERSION v0.19.0

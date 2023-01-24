@@ -10,8 +10,6 @@ whoami
 /frequency/frequency --dev \
     -lruntime=debug \
     --instant-sealing \
-    --wasm-execution=compiled \
-    --execution=wasm \
     --no-telemetry \
     --no-prometheus \
     --port=30333 \
@@ -25,6 +23,6 @@ whoami
     &
 
 cd frequency/schemas
-npm install && npm run deploy
+npm run deploy
 
 fg %1
