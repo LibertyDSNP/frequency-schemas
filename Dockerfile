@@ -2,7 +2,7 @@
 # locally in instant seal mode then deploying schemas to that node.
 
 #This pulls the latest instant-seal-node image
-FROM frequencychain/instant-seal-node as frequency-image
+FROM frequencychain/instant-seal-node:latest as frequency-image
 
 #Switch to root to install node on image
 USER root
@@ -46,6 +46,9 @@ RUN chmod +x /tini
 EXPOSE 9933 9944 30333
 
 VOLUME ["/data"]
+
+HEALTHCHECK --start-period=15s \
+  CMD curl --fail -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "rpc_methods"}' http://localhost:9933/ || exit 1
 
 ENTRYPOINT ["/tini", "--"]
 
