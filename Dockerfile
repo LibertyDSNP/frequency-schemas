@@ -47,6 +47,9 @@ EXPOSE 9933 9944 30333
 
 VOLUME ["/data"]
 
+HEALTHCHECK --start-period=15s \
+  CMD curl --fail -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "rpc_methods"}' http://localhost:9933/ || exit 1
+
 ENTRYPOINT ["/tini", "--"]
 
 # Params which can be overriden from CLI
