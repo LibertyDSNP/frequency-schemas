@@ -8,7 +8,11 @@ export default {
     {
       name: "pridList",
       type: "array",
-      items: "bytes", // string?
+      items: {
+        "type": "fixed",
+        "size": 16, // or 8...
+        "doc": "Pseudonymous Relationship Identifier"
+      },
     },
     // Should we put the encryption into a standard box like SEF?
     {
@@ -43,7 +47,11 @@ const pridsAsItemized = {
       {
           name: "pridList",
           type: "array",
-          items: "bytes", // Or string
+          items: {
+            "type": "fixed",
+            "size": 16, // or 8...
+            "doc": "Pseudonymous Relationship Identifier"
+          },
           doc: "PRId List"
       },
   ]
