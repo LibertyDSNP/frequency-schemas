@@ -6,22 +6,17 @@ export default {
     // When converting from Frequency Data to DSNP Announcement, assume:
     // - announcementType = 7
     // - fromId = [Associated MSA Id]
-    {
-      name: "keyType",
-      type: {
-        name: "KeyTypeEnum",
-        type: "enum",
-        symbols: ["keyAgreement"], // Encoded as int, but this limits the enum to this one value... which is basically nothing.
-        // Enum could instead be at the protocol level?
-      },
-    },
+    // - keyType = 1 for this SchemaId
+    // DID Key Id could be publicKey or could be the index of the array. Not user assigned
     {
       name: "publicKey",
-      type: "string", // OR "bytes" bytes would break the multikey?
+      doc: "Multicodec public key",
+      type: "bytes",
     },
     {
       name: "revokedAsOf",
       type: "long",
+      doc: "Unix epoch seconds"
     },
   ],
 };

@@ -1,5 +1,4 @@
 // Paginated Chunk with PRIds
-// https://github.com/Liberty30/admin/wiki/Simple-Encryption-Formats
 export default {
   type: "record",
   name: "UserPrivateGraphChunk",
@@ -14,29 +13,18 @@ export default {
         "doc": "Pseudonymous Relationship Identifier"
       },
     },
-    // Should we put the encryption into a standard box like SEF?
     {
-      name: "cyphertext",
-      type: "bytes", // base64url string?
-    },
-    {
-      name: "nonce",
-      type: "bytes", // base64url string?
+      name: "ephemeralPublicKey+nonce+cyphertext",
+      type: "bytes",
     },
     {
-      name: "ephemeralPublicKey",
-      type: "bytes", // base64url string?
-    },
-    { // Do we need this?
-      name: "algorithm",
-      type: "string", // enum?
-    },
-    { // Can we remove this or replace with a version number?
-      name: "compressionAlgorithm",
-      type: "string",
+      name: "dsnpVersion",
+      type: "int",
     },
   ],
 };
+
+// Unlikely to use the below ones.
 
 const pridsAsItemized = {
   namespace: "org.dsnp",

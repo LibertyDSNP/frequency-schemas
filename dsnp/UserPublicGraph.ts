@@ -1,9 +1,11 @@
 export default {
   namespace: "org.dsnp.userdata",
-  name: "GraphEdge",
-  type: "record",
+  type: "array",
   doc: "A relationship to another DSNP user",
-  fields: [
+  items: {
+    type: "record",
+    name: "GraphEdge",
+    fields: [
       {
           name: "userId",
           type: "long",
@@ -15,4 +17,5 @@ export default {
           doc: "Time when this relationship was originally established" // unix epoch rounded to the nearest 1000?
       }
   ]
+  }
 };
