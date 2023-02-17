@@ -4,6 +4,9 @@ import profile from "./dsnp/profile";
 import reaction from "./dsnp/reaction";
 import reply from "./dsnp/reply";
 import tombstone from "./dsnp/tombstone";
+import publicKey from "./dsnp/publicKey";
+import userPublicGraph from "./dsnp/userPublicGraph";
+import userPrivateGraph from "./dsnp/userPrivateGraph";
 import { ParquetModel } from "./types/frequency";
 import update from "./dsnp/update";
 import type { EventRecord } from "@polkadot/types/interfaces/system";
@@ -19,6 +22,9 @@ const nameToSchema = new Map<string, ParquetModel | object>([
   ["tombstone", tombstone],
   ["update", update],
   ["graphChange", graphChange],
+  ["publicKey", publicKey],
+  ["userPublicGraph", userPublicGraph],
+  ["userPrivateGraph", userPrivateGraph],
 ]);
 
 export const deploy = async () => {
@@ -30,7 +36,7 @@ export const deploy = async () => {
   let schema_names: string[];
 
   if (args.length == 0) {
-    schema_names = ["broadcast", "profile", "reaction", "reply", "tombstone", "update", "graphChange"];
+    schema_names = [...nameToSchema.keys()];
   } else if (args.length == 1) {
     // Does schema with name exist?
     const schemaName = args[0];
