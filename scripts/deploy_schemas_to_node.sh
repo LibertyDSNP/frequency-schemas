@@ -19,7 +19,7 @@ whoami
     --rpc-cors=all \
     --ws-external \
     --rpc-methods=Unsafe \
-    --tmp \
+    --base-path=/data \
     &
 
 cd frequency/schemas
