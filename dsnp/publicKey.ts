@@ -16,7 +16,7 @@ export default {
     {
       name: "revokedAsOf",
       type: "long",
-      doc: "Unix epoch seconds"
+      doc: "Unix epoch seconds",
     },
   ],
 };
