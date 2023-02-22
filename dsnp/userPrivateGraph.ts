@@ -11,7 +11,7 @@ export default {
         items: {
           name: "prid",
           type: "fixed",
-          size: 16, // or 8...
+          size: 8,
           doc: "Pseudonymous Relationship Identifier",
         },
       },
@@ -21,32 +21,28 @@ export default {
       name: "encryptedCompressedPrivateGraph",
       type: "bytes",
     },
-    {
-      name: "dsnpVersion",
-      type: "int",
-    },
   ],
   types: [
     {
-      type: "record",
-      name: "GraphEdge",
-      fields: [
-        {
-          name: "userId",
-          type: "long",
-          doc: "DSNP User Id of object of relationship",
-        },
-        {
-          name: "since",
-          type: "long",
-          doc: "Time when this relationship was originally established", // unix epoch rounded to the nearest 1000?
-        },
-      ],
-    },
-    {
-      name: "PrivateGraph",
       type: "array",
-      items: "GraphEdge",
+      name: "PrivateGraph",
+      namespace: "org.dsnp",
+      items: {
+        type: "record",
+        name: "GraphEdge",
+        fields: [
+          {
+            name: "userId",
+            type: "long",
+            doc: "DSNP User Id of object of relationship",
+          },
+          {
+            name: "since",
+            type: "long",
+            doc: "Time when this relationship was originally established", // unix epoch rounded to the nearest 1000?
+          },
+        ],
+      },
     },
   ],
 };
