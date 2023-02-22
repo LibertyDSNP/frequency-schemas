@@ -23,6 +23,7 @@ export default {
     },
   ],
   types: [
+    // This is the inside type of the decrypted and decompressed data
     {
       type: "array",
       name: "PrivateGraph",
@@ -39,7 +40,7 @@ export default {
           {
             name: "since",
             type: "long",
-            doc: "Time when this relationship was originally established", // unix epoch rounded to the nearest 1000?
+            doc: "Unix epoch in seconds when this relationship was originally established rounded to the nearest 1000",
           },
         ],
       },

@@ -10,6 +10,7 @@ export default {
     },
   ],
   types: [
+    // This is the inside type of the decompressed data
     {
       type: "array",
       name: "PublicGraph",
@@ -26,7 +27,7 @@ export default {
           {
             name: "since",
             type: "long",
-            doc: "Time when this relationship was originally established", // unix epoch rounded to the nearest 1000?
+            doc: "Unix epoch in seconds when this relationship was originally established rounded to the nearest 1000",
           },
         ],
       },
