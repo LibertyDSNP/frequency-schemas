@@ -25,8 +25,14 @@ describe("Private Graph Schema", () => {
 
     const pridList = [pridType.random(), pridType.random()];
 
+    const keyIdType = avro.parse({
+      name: "identifier",
+      type: "long",
+    });
+
     // Generate the outside and buffer
     const outsideBuffer = outsideType.toBuffer({
+      keyId: keyIdType.random(),
       pridList,
       encryptedCompressedPrivateGraph: insideBuffer,
     });

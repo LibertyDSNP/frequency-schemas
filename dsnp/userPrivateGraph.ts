@@ -5,6 +5,11 @@ export default {
   namespace: "org.dsnp",
   fields: [
     {
+      name: "keyId",
+      type: "long",
+      doc: "User-Assigned Key Identifier",
+    },
+    {
       name: "pridList",
       type: {
         type: "array",
