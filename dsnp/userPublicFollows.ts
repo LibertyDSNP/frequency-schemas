@@ -1,37 +1,19 @@
-// Paginated Chunk with PRIds
+// Paginated Chunk of compressed data with a type defined for the data post decompression
 export default {
   type: "record",
-  name: "UserPrivateGraphChunk",
+  name: "UserPublicFollowsChunk",
   namespace: "org.dsnp",
   fields: [
     {
-      name: "keyId",
-      type: "long",
-      doc: "User-Assigned Key Identifier",
-    },
-    {
-      name: "pridList",
-      type: {
-        type: "array",
-        items: {
-          name: "prid",
-          type: "fixed",
-          size: 8,
-          doc: "Pseudonymous Relationship Identifier",
-        },
-      },
-    },
-    {
-      doc: "lib_sodium sealed box",
-      name: "encryptedCompressedPrivateGraph",
+      name: "compressedPublicGraph",
       type: "bytes",
     },
   ],
   types: [
-    // This is the inside type of the decrypted and decompressed data
+    // This is the inside type of the decompressed data
     {
       type: "array",
-      name: "PrivateGraph",
+      name: "PublicGraph",
       namespace: "org.dsnp",
       items: {
         type: "record",
