@@ -22,6 +22,11 @@ export default {
       },
     },
     {
+      name: "lastUpdated",
+      type: "long",
+      doc: "Days since Unix epoch when PRIds for this chunk were last refreshed",
+    },
+    {
       doc: "lib_sodium sealed box",
       name: "encryptedCompressedPrivateGraph",
       type: "bytes",

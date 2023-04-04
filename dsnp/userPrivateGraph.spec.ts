@@ -30,10 +30,18 @@ describe("Private Graph Schema", () => {
       type: "long",
     });
 
+    const lastUpdatedType = avro.parse({
+      name: "lastUpdated",
+      type: "long",
+    });
+
+    const lastUpdated = lastUpdatedType.random();
+
     // Generate the outside and buffer
     const outsideBuffer = outsideType.toBuffer({
       keyId: keyIdType.random(),
       pridList,
+      lastUpdated,
       encryptedCompressedPrivateGraph: insideBuffer,
     });
 
@@ -43,6 +51,9 @@ describe("Private Graph Schema", () => {
 
     // Check the inside parsed data is the same as the original.
     expect(insideParsed).toEqual(inside);
+
+    // check lastUpdated
+    expect(outsideParsed.lastUpdated).toEqual(lastUpdated);
 
     // Also check the pridList, but that is just testing Avro
     expect(outsideParsed.pridList).toEqual(pridList);
