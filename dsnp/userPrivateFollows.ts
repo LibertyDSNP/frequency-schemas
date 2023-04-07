@@ -1,4 +1,4 @@
-// Paginated Chunk with PRIds
+// Paginated Chunks
 export default {
   type: "record",
   name: "UserPrivateFollowsChunk",
