@@ -18,10 +18,5 @@ export default {
       type: "long",
       doc: "User-Assigned Key Identifier",
     },
-    {
-      name: "revokedAsOf",
-      type: "long",
-      doc: "Unix epoch seconds",
-    },
   ],
 };
