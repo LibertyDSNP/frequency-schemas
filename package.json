@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/LibertyDSNP/schemas#readme",
   "dependencies": {
-    "@frequency-chain/api-augment": "1.4.0-rc3",
+    "@frequency-chain/api-augment": "1.5.1",
     "@polkadot/api": "^9.14.1",
     "@polkadot/extension-dapp": "^0.44.6",
     "@polkadot/types": "^9.14.1",
