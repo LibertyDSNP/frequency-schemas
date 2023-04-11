@@ -3,23 +3,9 @@ import { getEndpoint, getFrequencyAPI } from "./services/connect";
 
 import stringify from "json-stringify-pretty-compact";
 
-import broadcast from "./dsnp/broadcast";
-import graphChange from "./dsnp/graphChange";
-import profile from "./dsnp/profile";
-import reaction from "./dsnp/reaction";
-import reply from "./dsnp/reply";
-import tombstone from "./dsnp/tombstone";
-import update from "./dsnp/update";
+import { dsnpSchemas } from "./dsnp";
 
-const nameAndSchema = [
-  ["dsnp.broadcast", JSON.stringify(broadcast)],
-  ["dsnp.profile", JSON.stringify(profile)],
-  ["dsnp.reaction", JSON.stringify(reaction)],
-  ["dsnp.reply", JSON.stringify(reply)],
-  ["dsnp.tombstone", JSON.stringify(tombstone)],
-  ["dsnp.update", JSON.stringify(update)],
-  ["dsnp.graphChange", JSON.stringify(graphChange)],
-];
+const nameAndSchema = Array.from(dsnpSchemas.entries(), ([k, v]) => [`dsnp.${k}`, JSON.stringify(v.model)]);
 
 const read = async () => {
   const api = await getFrequencyAPI();

@@ -1,7 +1,7 @@
 // Paginated Chunk of compressed data with a type defined for the data post decompression
 export default {
   type: "record",
-  name: "UserPublicGraphChunk",
+  name: "UserPublicFollowsChunk",
   namespace: "org.dsnp",
   fields: [
     {

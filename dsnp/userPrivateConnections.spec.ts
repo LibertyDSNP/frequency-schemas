@@ -1,17 +1,17 @@
-import privateGraphSchema from "./userPrivateGraph";
+import privateConnectionsSchema from "./userPrivateConnections";
 import avro from "avro-js";
 
-describe("Private Graph Schema", () => {
+describe("Private Connections Schema", () => {
   it("Is Avro", () => {
-    const parsed = avro.parse(privateGraphSchema);
+    const parsed = avro.parse(privateConnectionsSchema);
     expect(parsed).toBeDefined();
   });
 
   it("can work with the inside type", () => {
     // Parse the inside and outside types.
     // The inside type must be self contained.
-    const outsideType = avro.parse(privateGraphSchema);
-    const insideType = avro.parse(privateGraphSchema.types[0]);
+    const outsideType = avro.parse(privateConnectionsSchema);
+    const insideType = avro.parse(privateConnectionsSchema.types[0]);
 
     // Generate a random inside type
     const inside = insideType.random();

@@ -1,25 +1,13 @@
-// Paginated Chunk with PRIds
+// Paginated Chunks
 export default {
   type: "record",
-  name: "UserPrivateGraphChunk",
+  name: "UserPrivateFollowsChunk",
   namespace: "org.dsnp",
   fields: [
     {
       name: "keyId",
       type: "long",
       doc: "User-Assigned Key Identifier",
-    },
-    {
-      name: "pridList",
-      type: {
-        type: "array",
-        items: {
-          name: "prid",
-          type: "fixed",
-          size: 8,
-          doc: "Pseudonymous Relationship Identifier",
-        },
-      },
     },
     {
       doc: "lib_sodium sealed box",
