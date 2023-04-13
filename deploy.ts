@@ -62,6 +62,11 @@ const createSchemas = async (schema_names: string[]) => {
   const shouldPropose =
     api.genesisHash.toHex() === "0x4a587bf17a404e3572747add7aab7bbe56e805a5479c6c436f07f36fcc8d3ae1";
 
+  if (shouldPropose && schema_names.length > 1) {
+    console.error("Proposing to create schemas can only occur one at a time. Please try again with only one schema.");
+    process.exit(1);
+  }
+
   // Retrieve the current account nonce so we can increment it when submitting transactions
   let nonce = (await api.rpc.system.accountNextIndex(signerAccountKeys.address)).toNumber();
 
