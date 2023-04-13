@@ -4,7 +4,6 @@ import { getFrequencyAPI, getSignerAccountKeys } from "./services/connect";
 import { dsnpSchemas } from "./dsnp";
 
 export const deploy = async () => {
-  console.log("Deploy of Schemas Starting...");
 
   // Process arguments
   const args = process.argv.slice(2);
@@ -13,6 +12,20 @@ export const deploy = async () => {
 
   if (args.length == 0) {
     schema_names = [...dsnpSchemas.keys()];
+  } else if (args.length > 0 && args.includes("help")) {
+    const help = `Deploy Schemas Script`
+    console.log([
+      "Deploy Schemas Script",
+      "",
+      "Environment Variables:",
+      "- DEPLOY_SCHEMA_ACCOUNT_URI",
+      "- DEPLOY_SCHEMA_ENDPOINT_URL",
+      "",
+      'Example: DEPLOY_SCHEMA_ACCOUNT_URI="//Bob" DEPLOY_SCHEMA_ENDPOINT_URL="ws://127.0.0.1:9944" npm run deploy',
+      "",
+    ].join("\n"));
+    console.log("Available Schemas:\n-", [...dsnpSchemas.keys()].join("\n- "));
+    process.exit();
   } else if (args.length == 1) {
     // Does schema with name exist?
     const schemaName = args[0];
@@ -27,6 +40,8 @@ export const deploy = async () => {
     console.error("ERROR: You can only specify a single schema to create or all schemas if not specified.");
     process.exit(1);
   }
+
+  console.log("Deploy of Schemas Starting...");
 
   await createSchemas(schema_names);
 };

@@ -30,6 +30,12 @@ e.g. To register the "profile" schema
 
 # Additional Tools
 
+## Help
+
+```
+npm run deploy help
+```
+
 ## Read all Schemas from a Chain
 
 ```
