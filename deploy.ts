@@ -4,7 +4,6 @@ import { getFrequencyAPI, getSignerAccountKeys } from "./services/connect";
 import { dsnpSchemas } from "./dsnp";
 
 export const deploy = async () => {
-
   // Process arguments
   const args = process.argv.slice(2);
 
@@ -13,17 +12,18 @@ export const deploy = async () => {
   if (args.length == 0) {
     schema_names = [...dsnpSchemas.keys()];
   } else if (args.length > 0 && args.includes("help")) {
-    const help = `Deploy Schemas Script`
-    console.log([
-      "Deploy Schemas Script",
-      "",
-      "Environment Variables:",
-      "- DEPLOY_SCHEMA_ACCOUNT_URI",
-      "- DEPLOY_SCHEMA_ENDPOINT_URL",
-      "",
-      'Example: DEPLOY_SCHEMA_ACCOUNT_URI="//Bob" DEPLOY_SCHEMA_ENDPOINT_URL="ws://127.0.0.1:9944" npm run deploy',
-      "",
-    ].join("\n"));
+    console.log(
+      [
+        "Deploy Schemas Script",
+        "",
+        "Environment Variables:",
+        "- DEPLOY_SCHEMA_ACCOUNT_URI",
+        "- DEPLOY_SCHEMA_ENDPOINT_URL",
+        "",
+        'Example: DEPLOY_SCHEMA_ACCOUNT_URI="//Bob" DEPLOY_SCHEMA_ENDPOINT_URL="ws://127.0.0.1:9944" npm run deploy',
+        "",
+      ].join("\n")
+    );
     console.log("Available Schemas:\n-", [...dsnpSchemas.keys()].join("\n- "));
     process.exit();
   } else if (args.length == 1) {
@@ -59,7 +59,8 @@ const createSchemas = async (schema_names: string[]) => {
   const api = await getFrequencyAPI();
   const signerAccountKeys = getSignerAccountKeys();
   // Mainnet genesis hash means we should propose instead of create
-  const shouldPropose = api.genesisHash.toHex() === "0x4a587bf17a404e3572747add7aab7bbe56e805a5479c6c436f07f36fcc8d3ae1";
+  const shouldPropose =
+    api.genesisHash.toHex() === "0x4a587bf17a404e3572747add7aab7bbe56e805a5479c6c436f07f36fcc8d3ae1";
 
   // Retrieve the current account nonce so we can increment it when submitting transactions
   let nonce = (await api.rpc.system.accountNextIndex(signerAccountKeys.address)).toNumber();
@@ -79,7 +80,12 @@ const createSchemas = async (schema_names: string[]) => {
       // Propose to create
       const promise = new Promise<void>((resolve, reject) => {
         api.tx.schemas
-          .proposeToCreateSchema(json_no_ws, schemaDeploy.modelType, schemaDeploy.payloadLocation, schemaDeploy.settings)
+          .proposeToCreateSchema(
+            json_no_ws,
+            schemaDeploy.modelType,
+            schemaDeploy.payloadLocation,
+            schemaDeploy.settings
+          )
           .signAndSend(signerAccountKeys, { nonce: nonce++ }, ({ status, events, dispatchError }) => {
             if (dispatchError) {
               console.error("ERROR: ", dispatchError.toHuman());
@@ -99,22 +105,27 @@ const createSchemas = async (schema_names: string[]) => {
       promises.push(promise);
     } else {
       // Create directly via sudo
-      const tx = api.tx.schemas.createSchemaViaGovernance(signerAccountKeys.address, json_no_ws, schemaDeploy.modelType, schemaDeploy.payloadLocation, schemaDeploy.settings);
+      const tx = api.tx.schemas.createSchemaViaGovernance(
+        signerAccountKeys.address,
+        json_no_ws,
+        schemaDeploy.modelType,
+        schemaDeploy.payloadLocation,
+        schemaDeploy.settings
+      );
       const promise = new Promise<void>((resolve, reject) => {
-        api.tx.sudo.sudo(tx)
-          .signAndSend(signerAccountKeys, { nonce: nonce++ }, ({ status, events, dispatchError }) => {
-            if (dispatchError) {
-              console.error("ERROR: ", dispatchError.toHuman());
-              reject();
-            } else if (status.isInBlock || status.isFinalized) {
-              const evt = eventWithSectionAndMethod(events, "schemas", "SchemaCreated");
-              if (evt) {
-                const val = evt?.data[1];
-                console.log("SUCCESS: " + schemaName + " schema created with id of " + val);
-              }
-              resolve();
+        api.tx.sudo.sudo(tx).signAndSend(signerAccountKeys, { nonce: nonce++ }, ({ status, events, dispatchError }) => {
+          if (dispatchError) {
+            console.error("ERROR: ", dispatchError.toHuman());
+            reject();
+          } else if (status.isInBlock || status.isFinalized) {
+            const evt = eventWithSectionAndMethod(events, "schemas", "SchemaCreated");
+            if (evt) {
+              const val = evt?.data[1];
+              console.log("SUCCESS: " + schemaName + " schema created with id of " + val);
             }
-          });
+            resolve();
+          }
+        });
       });
       promises.push(promise);
     }

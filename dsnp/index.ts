@@ -15,7 +15,7 @@ import update from "./update";
 type PayloadLocation = "IPFS" | "OnChain" | "Itemized" | "Paginated";
 type ModelType = "AvroBinary" | "Parquet";
 
-type Settings = 'AppendOnly' | 'SignatureRequired';
+type Settings = "AppendOnly" | "SignatureRequired";
 
 export type Deploy = {
   model: ParquetModel | object;
@@ -92,7 +92,7 @@ export const dsnpSchemas = new Map<string, Deploy>([
       model: publicKey,
       modelType: "AvroBinary",
       payloadLocation: "Itemized",
-      settings: ['AppendOnly', 'SignatureRequired'],
+      settings: ["AppendOnly", "SignatureRequired"],
     },
   ],
   [
