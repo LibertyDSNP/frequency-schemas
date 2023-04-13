@@ -15,10 +15,13 @@ import update from "./update";
 type PayloadLocation = "IPFS" | "OnChain" | "Itemized" | "Paginated";
 type ModelType = "AvroBinary" | "Parquet";
 
+type Settings = 'AppendOnly' | 'SignatureRequired';
+
 export type Deploy = {
   model: ParquetModel | object;
   modelType: ModelType;
   payloadLocation: PayloadLocation;
+  settings: Settings[];
 };
 
 // Map schema names (string) to deploy object
@@ -29,6 +32,7 @@ export const dsnpSchemas = new Map<string, Deploy>([
       model: broadcast,
       modelType: "Parquet",
       payloadLocation: "IPFS",
+      settings: [],
     },
   ],
   [
@@ -37,6 +41,7 @@ export const dsnpSchemas = new Map<string, Deploy>([
       model: profile,
       modelType: "Parquet",
       payloadLocation: "IPFS",
+      settings: [],
     },
   ],
   [
@@ -45,6 +50,7 @@ export const dsnpSchemas = new Map<string, Deploy>([
       model: reaction,
       modelType: "Parquet",
       payloadLocation: "IPFS",
+      settings: [],
     },
   ],
   [
@@ -53,6 +59,7 @@ export const dsnpSchemas = new Map<string, Deploy>([
       model: reply,
       modelType: "Parquet",
       payloadLocation: "IPFS",
+      settings: [],
     },
   ],
   [
@@ -61,6 +68,7 @@ export const dsnpSchemas = new Map<string, Deploy>([
       model: tombstone,
       modelType: "Parquet",
       payloadLocation: "IPFS",
+      settings: [],
     },
   ],
   [
@@ -69,6 +77,7 @@ export const dsnpSchemas = new Map<string, Deploy>([
       model: update,
       modelType: "Parquet",
       payloadLocation: "IPFS",
+      settings: [],
     },
   ],
   // Deprecated
@@ -83,6 +92,7 @@ export const dsnpSchemas = new Map<string, Deploy>([
       model: publicKey,
       modelType: "AvroBinary",
       payloadLocation: "Itemized",
+      settings: ['AppendOnly', 'SignatureRequired'],
     },
   ],
   [
@@ -91,6 +101,7 @@ export const dsnpSchemas = new Map<string, Deploy>([
       model: userPublicFollows,
       modelType: "AvroBinary",
       payloadLocation: "Paginated",
+      settings: [],
     },
   ],
   [
@@ -99,6 +110,7 @@ export const dsnpSchemas = new Map<string, Deploy>([
       model: userPrivateFollows,
       modelType: "AvroBinary",
       payloadLocation: "Paginated",
+      settings: [],
     },
   ],
   [
@@ -107,6 +119,7 @@ export const dsnpSchemas = new Map<string, Deploy>([
       model: userPrivateConnections,
       modelType: "AvroBinary",
       payloadLocation: "Paginated",
+      settings: [],
     },
   ],
 ]);

@@ -55,9 +55,11 @@ const eventWithSectionAndMethod = (events: EventRecord[], section: string, metho
 
 // Given a list of schema names, attempt to create them with the chain.
 const createSchemas = async (schema_names: string[]) => {
-  const promises = [];
+  const promises: Promise<void>[] = [];
   const api = await getFrequencyAPI();
   const signerAccountKeys = getSignerAccountKeys();
+  // Mainnet genesis hash means we should propose instead of create
+  const shouldPropose = api.genesisHash.toHex() === "0x4a587bf17a404e3572747add7aab7bbe56e805a5479c6c436f07f36fcc8d3ae1";
 
   // Retrieve the current account nonce so we can increment it when submitting transactions
   let nonce = (await api.rpc.system.accountNextIndex(signerAccountKeys.address)).toNumber();
@@ -73,24 +75,49 @@ const createSchemas = async (schema_names: string[]) => {
     // Remove whitespace in the JSON
     const json_no_ws = JSON.stringify(JSON.parse(json));
 
-    const promise = new Promise<void>((resolve, reject) => {
-      api.tx.schemas
-        .createSchema(json_no_ws, schemaDeploy.modelType, schemaDeploy.payloadLocation)
-        .signAndSend(signerAccountKeys, { nonce: nonce++ }, ({ status, events, dispatchError }) => {
-          if (dispatchError) {
-            console.log("ERROR: " + dispatchError.toHuman());
-            reject();
-          } else if (status.isInBlock || status.isFinalized) {
-            const evt = eventWithSectionAndMethod(events, "schemas", "SchemaCreated");
-            if (evt) {
-              const val = evt?.data[1];
-              console.log("SUCCESS: " + schemaName + " schema created with id of " + val);
+    if (shouldPropose) {
+      // Propose to create
+      const promise = new Promise<void>((resolve, reject) => {
+        api.tx.schemas
+          .proposeToCreateSchema(json_no_ws, schemaDeploy.modelType, schemaDeploy.payloadLocation, schemaDeploy.settings)
+          .signAndSend(signerAccountKeys, { nonce: nonce++ }, ({ status, events, dispatchError }) => {
+            if (dispatchError) {
+              console.error("ERROR: ", dispatchError.toHuman());
+              console.log("Might already have a proposal with the same hash?");
+              reject();
+            } else if (status.isInBlock || status.isFinalized) {
+              const evt = eventWithSectionAndMethod(events, "council", "Proposed");
+              if (evt) {
+                const id = evt?.data[1];
+                const hash = evt?.data[2].toHex();
+                console.log("SUCCESS: " + schemaName + " schema proposed with id of " + id + " and hash of " + hash);
+              }
+              resolve();
             }
-            resolve();
-          }
-        });
-    });
-    promises.push(promise);
+          });
+      });
+      promises.push(promise);
+    } else {
+      // Create directly via sudo
+      const tx = api.tx.schemas.createSchemaViaGovernance(signerAccountKeys.address, json_no_ws, schemaDeploy.modelType, schemaDeploy.payloadLocation, schemaDeploy.settings);
+      const promise = new Promise<void>((resolve, reject) => {
+        api.tx.sudo.sudo(tx)
+          .signAndSend(signerAccountKeys, { nonce: nonce++ }, ({ status, events, dispatchError }) => {
+            if (dispatchError) {
+              console.error("ERROR: ", dispatchError.toHuman());
+              reject();
+            } else if (status.isInBlock || status.isFinalized) {
+              const evt = eventWithSectionAndMethod(events, "schemas", "SchemaCreated");
+              if (evt) {
+                const val = evt?.data[1];
+                console.log("SUCCESS: " + schemaName + " schema created with id of " + val);
+              }
+              resolve();
+            }
+          });
+      });
+      promises.push(promise);
+    }
   }
   return Promise.all(promises);
 };
