@@ -7,16 +7,12 @@ export default {
     // - announcementType = 7
     // - fromId = [Associated MSA Id]
     // - keyType = 1 for this SchemaId
+    // - keyId = `index` from the Itemized storage
     // DID Key Id could be publicKey or could be the index of the array. Not user assigned
     {
       name: "publicKey",
       doc: "Multicodec public key",
       type: "bytes",
-    },
-    {
-      name: "keyId",
-      type: "long",
-      doc: "User-Assigned Key Identifier",
     },
   ],
 };

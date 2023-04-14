@@ -10,6 +10,7 @@ export default {
       doc: "User-Assigned Key Identifier",
     },
     {
+      // The PRId List should be ordered the same as the GraphEdges
       name: "pridList",
       type: {
         type: "array",
