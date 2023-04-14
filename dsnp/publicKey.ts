@@ -13,6 +13,6 @@ export default {
       name: "publicKey",
       doc: "Multicodec public key",
       type: "bytes",
-    }
+    },
   ],
 };
