@@ -11,7 +11,7 @@ To deploy/register all schemas:
 
     npm run deploy
 
-by default it will deploy to the `localhost` node on port 9944 using the Alice test account.
+by default it will deploy to the `localhost` node on port 9944 using the Alice sudo test account.
 
 Two environment variables allow you to change these defaults:
 
@@ -28,7 +28,16 @@ e.g. To register the "profile" schema
 
     npm run deploy profile
 
+**Note:** Requires a sudo key if deploying to a testnet.
+Mainnet will use the proposal system (`proposeToCreateSchema`).
+
 # Additional Tools
+
+## Help
+
+```
+npm run deploy help
+```
 
 ## Read all Schemas from a Chain
 

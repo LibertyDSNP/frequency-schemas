@@ -4,8 +4,6 @@ import { getFrequencyAPI, getSignerAccountKeys } from "./services/connect";
 import { dsnpSchemas } from "./dsnp";
 
 export const deploy = async () => {
-  console.log("Deploy of Schemas Starting...");
-
   // Process arguments
   const args = process.argv.slice(2);
 
@@ -13,6 +11,21 @@ export const deploy = async () => {
 
   if (args.length == 0) {
     schema_names = [...dsnpSchemas.keys()];
+  } else if (args.length > 0 && args.includes("help")) {
+    console.log(
+      [
+        "Deploy Schemas Script",
+        "",
+        "Environment Variables:",
+        "- DEPLOY_SCHEMA_ACCOUNT_URI",
+        "- DEPLOY_SCHEMA_ENDPOINT_URL",
+        "",
+        'Example: DEPLOY_SCHEMA_ACCOUNT_URI="//Bob" DEPLOY_SCHEMA_ENDPOINT_URL="ws://127.0.0.1:9944" npm run deploy',
+        "",
+      ].join("\n")
+    );
+    console.log("Available Schemas:\n-", [...dsnpSchemas.keys()].join("\n- "));
+    process.exit();
   } else if (args.length == 1) {
     // Does schema with name exist?
     const schemaName = args[0];
@@ -28,6 +41,8 @@ export const deploy = async () => {
     process.exit(1);
   }
 
+  console.log("Deploy of Schemas Starting...");
+
   await createSchemas(schema_names);
 };
 
@@ -40,9 +55,17 @@ const eventWithSectionAndMethod = (events: EventRecord[], section: string, metho
 
 // Given a list of schema names, attempt to create them with the chain.
 const createSchemas = async (schema_names: string[]) => {
-  const promises = [];
+  const promises: Promise<void>[] = [];
   const api = await getFrequencyAPI();
   const signerAccountKeys = getSignerAccountKeys();
+  // Mainnet genesis hash means we should propose instead of create
+  const shouldPropose =
+    api.genesisHash.toHex() === "0x4a587bf17a404e3572747add7aab7bbe56e805a5479c6c436f07f36fcc8d3ae1";
+
+  if (shouldPropose && schema_names.length > 1) {
+    console.error("Proposing to create schemas can only occur one at a time. Please try again with only one schema.");
+    process.exit(1);
+  }
 
   // Retrieve the current account nonce so we can increment it when submitting transactions
   let nonce = (await api.rpc.system.accountNextIndex(signerAccountKeys.address)).toNumber();
@@ -58,12 +81,46 @@ const createSchemas = async (schema_names: string[]) => {
     // Remove whitespace in the JSON
     const json_no_ws = JSON.stringify(JSON.parse(json));
 
-    const promise = new Promise<void>((resolve, reject) => {
-      api.tx.schemas
-        .createSchema(json_no_ws, schemaDeploy.modelType, schemaDeploy.payloadLocation)
-        .signAndSend(signerAccountKeys, { nonce: nonce++ }, ({ status, events, dispatchError }) => {
+    if (shouldPropose) {
+      // Propose to create
+      const promise = new Promise<void>((resolve, reject) => {
+        api.tx.schemas
+          .proposeToCreateSchema(
+            json_no_ws,
+            schemaDeploy.modelType,
+            schemaDeploy.payloadLocation,
+            schemaDeploy.settings
+          )
+          .signAndSend(signerAccountKeys, { nonce: nonce++ }, ({ status, events, dispatchError }) => {
+            if (dispatchError) {
+              console.error("ERROR: ", dispatchError.toHuman());
+              console.log("Might already have a proposal with the same hash?");
+              reject();
+            } else if (status.isInBlock || status.isFinalized) {
+              const evt = eventWithSectionAndMethod(events, "council", "Proposed");
+              if (evt) {
+                const id = evt?.data[1];
+                const hash = evt?.data[2].toHex();
+                console.log("SUCCESS: " + schemaName + " schema proposed with id of " + id + " and hash of " + hash);
+              }
+              resolve();
+            }
+          });
+      });
+      promises.push(promise);
+    } else {
+      // Create directly via sudo
+      const tx = api.tx.schemas.createSchemaViaGovernance(
+        signerAccountKeys.address,
+        json_no_ws,
+        schemaDeploy.modelType,
+        schemaDeploy.payloadLocation,
+        schemaDeploy.settings
+      );
+      const promise = new Promise<void>((resolve, reject) => {
+        api.tx.sudo.sudo(tx).signAndSend(signerAccountKeys, { nonce: nonce++ }, ({ status, events, dispatchError }) => {
           if (dispatchError) {
-            console.log("ERROR: " + dispatchError.toHuman());
+            console.error("ERROR: ", dispatchError.toHuman());
             reject();
           } else if (status.isInBlock || status.isFinalized) {
             const evt = eventWithSectionAndMethod(events, "schemas", "SchemaCreated");
@@ -74,8 +131,9 @@ const createSchemas = async (schema_names: string[]) => {
             resolve();
           }
         });
-    });
-    promises.push(promise);
+      });
+      promises.push(promise);
+    }
   }
   return Promise.all(promises);
 };

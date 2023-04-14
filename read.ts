@@ -28,7 +28,7 @@ const read = async () => {
     const schemaResult = (await api.rpc.schemas.getBySchemaId(i)).unwrap();
     const jsonSchema = Buffer.from(schemaResult.model).toString("utf8");
     const modelParsed = JSON.parse(jsonSchema);
-    const { schema_id, model_type, payload_location } = schemaResult;
+    const { schema_id, model_type, payload_location, setting } = schemaResult;
 
     // Check for matches
     const matchesDSNPSchemas = nameAndSchema.reduce((arr, [schemaName, schemaString]) => {
@@ -43,6 +43,7 @@ const read = async () => {
         model_type,
         payload_location,
         matchesDSNPSchemas,
+        setting,
       }).map(([key, value]) => ({ key, value: value.toString() }))
     );
     console.log("\n## Schema Model");
