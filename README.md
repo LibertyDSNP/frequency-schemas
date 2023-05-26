@@ -118,6 +118,9 @@ Push the tag up: `git push --tags`
 6. Monitor the [build](https://github.com/LibertyDSNP/schemas/actions)
 7. When that finishes successfully, check [docker hub](https://hub.docker.com/r/dsnp/instant-seal-node-with-deployed-schemas/tags) to verify that the image was pushed up
 
+## To Build Locally
+1. `docker build -t dsnp/instant-seal-node-with-deployed-schemas:latest -t dsnp/instant-seal-node-with-deployed-schemas:<versionNumberHere> .`
+
 ## To run locally
 For any local testing do the following:
 1. `docker pull dsnp/instant-seal-node-with-deployed-schemas:latest`
