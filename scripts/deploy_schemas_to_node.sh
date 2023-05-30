@@ -9,7 +9,7 @@ whoami
 
 /frequency/frequency --dev \
     -lruntime=debug \
-    --instant-sealing \
+    --sealing=instant \
     --no-telemetry \
     --no-prometheus \
     --port=30333 \
