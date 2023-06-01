@@ -5,8 +5,8 @@
   "scripts": {
     "test": "jest",
     "build": "tsc",
-    "deploy": "ts-node index.ts",
-    "read": "ts-node read.ts",
+    "deploy": "ts-node cli/index.ts",
+    "read": "ts-node cli/read.ts",
     "clean": "rm -Rf dist",
     "format": "tsc --noEmit --pretty && eslint --fix \"**/*.ts\"",
     "lint": "tsc --noEmit --pretty && eslint \"**/*.ts\""

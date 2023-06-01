@@ -3,7 +3,7 @@ import { getEndpoint, getFrequencyAPI } from "./services/connect";
 
 import stringify from "json-stringify-pretty-compact";
 
-import { dsnpSchemas } from "./dsnp";
+import { dsnpSchemas } from "../dsnp";
 
 const nameAndSchema = Array.from(dsnpSchemas.entries(), ([k, v]) => [`dsnp.${k}`, JSON.stringify(v.model)]);
 
