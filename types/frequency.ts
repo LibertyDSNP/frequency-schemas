@@ -1,6 +1,6 @@
 // Last updated 2023-06-01
 
-import { ParquetCompression } from "@dsnp/parquetjs/dist/lib/declare";
+import type { ParquetCompression } from "@dsnp/parquetjs/dist/lib/declare";
 
 export type FrequencyParquetSchema = Array<ParquetColumn>;
 
