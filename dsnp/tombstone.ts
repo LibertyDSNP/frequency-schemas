@@ -1,6 +1,6 @@
-import { ParquetModel } from "../types/frequency";
+import { FrequencyParquetSchema } from "../types/frequency";
 
-const tombstone: ParquetModel = [
+const tombstone: FrequencyParquetSchema = [
   {
     name: "announcementType",
     column_type: {
