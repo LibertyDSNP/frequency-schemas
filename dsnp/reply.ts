@@ -1,6 +1,6 @@
-import { ParquetModel } from "../types/frequency";
+import { FrequencyParquetSchema } from "../types/frequency";
 
-const reply: ParquetModel = [
+const reply: FrequencyParquetSchema = [
   {
     name: "announcementType",
     column_type: {

@@ -1,11 +1,10 @@
-import "@frequency-chain/api-augment";
 import { getEndpoint, getFrequencyAPI } from "./services/connect";
 
 import stringify from "json-stringify-pretty-compact";
 
-import { dsnpSchemas } from "./dsnp";
+import { schemas } from "../dsnp";
 
-const nameAndSchema = Array.from(dsnpSchemas.entries(), ([k, v]) => [`dsnp.${k}`, JSON.stringify(v.model)]);
+const nameAndSchema = Array.from(schemas.entries(), ([k, v]) => [`dsnp.${k}`, JSON.stringify(v.model)]);
 
 const read = async () => {
   const api = await getFrequencyAPI();
@@ -21,14 +20,14 @@ const read = async () => {
   console.table(Object.entries(connectionInfo).map(([key, value]) => ({ key, value: value.toString() })));
 
   console.log("\n## Schema Information");
-  const maxSchemaId = (await api.query.schemas.currentSchemaIdentifierMaximum()).toNumber();
+  const maxSchemaId = Number((await api.query.schemas.currentSchemaIdentifierMaximum()).toString());
   console.log(`There are ${maxSchemaId} schemas on the connected chain.`);
 
   for (let i = 1; i <= maxSchemaId; i++) {
     const schemaResult = (await api.rpc.schemas.getBySchemaId(i)).unwrap();
     const jsonSchema = Buffer.from(schemaResult.model).toString("utf8");
     const modelParsed = JSON.parse(jsonSchema);
-    const { schema_id, model_type, payload_location, setting } = schemaResult;
+    const { schema_id, model_type, payload_location, settings } = schemaResult;
 
     // Check for matches
     const matchesDSNPSchemas = nameAndSchema.reduce((arr, [schemaName, schemaString]) => {
@@ -43,8 +42,8 @@ const read = async () => {
         model_type,
         payload_location,
         matchesDSNPSchemas,
-        setting,
-      }).map(([key, value]) => ({ key, value: value.toString() }))
+        settings,
+      }).map(([key, value]) => ({ key, value: value && value.toHuman ? value.toHuman() : value }))
     );
     console.log("\n## Schema Model");
     console.log(stringify(modelParsed));

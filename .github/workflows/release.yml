@@ -1,11 +1,9 @@
-name: Tests CI
+name: Release Package
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ '**' ]
+  release:
+    types: [ released ]
 jobs:
-  test:
+  publish-to-npm:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -21,15 +19,15 @@ jobs:
       - name: Install 💾
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
-
-      - name: Test
-        run: npm run test
-
       - name: Build
         run: npm run build
 
-      - name: Publish Dry Run
-        run: npm publish --dry-run
+      - name: Version ⬆️
+        run: npm version --new-version ${{ github.event.release.tag_name }} --no-git-tag-version
         working-directory: dist
+
+      - name: Publish 🚂
+        run: npm publish --tag latest
+        working-directory: dist
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}

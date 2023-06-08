@@ -1,20 +1,17 @@
 import { options } from "@frequency-chain/api-augment";
-import { ApiPromise, WsProvider } from "@polkadot/api";
-import { Keyring } from "@polkadot/api";
-import { KeyringPair } from "@polkadot/keyring/types";
+import { ApiPromise, WsProvider, Keyring } from "@polkadot/api";
 
 // DEPLOY_SCHEMA_ENDPOINT_URL (environment variable)
 // The value is a URL for the RPC endpoint.  e.g. ws://localhost:9944
-export async function getFrequencyAPI() {
+export function getFrequencyAPI() {
   const DefaultWsProvider = new WsProvider(getEndpoint());
 
   // The "options" parameter pulls in the Frequency API extrinsics
-  const api = await ApiPromise.create({
+  return ApiPromise.create({
     provider: DefaultWsProvider,
+    throwOnConnect: true,
     ...options,
   });
-  await api.isReady;
-  return api;
 }
 
 export function getEndpoint() {
@@ -28,7 +25,7 @@ export function getEndpoint() {
 
 // DEPLOY_SCHEMA_ACCOUNT_URI (environment variable)
 // The value is a URI for the account.  e.g. //Alice or a mnemonic (seed words)
-export const getSignerAccountKeys = (): KeyringPair => {
+export const getSignerAccountKeys = () => {
   const keyring = new Keyring();
 
   let DEPLOY_SCHEMA_ACCOUNT_URI = process.env.DEPLOY_SCHEMA_ACCOUNT_URI;

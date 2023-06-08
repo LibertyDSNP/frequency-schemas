@@ -1,4 +1,4 @@
-import { testCompression, testParquetSchema } from "../helpers/parquet";
+import { testCompression, testParquetSchema } from "../test/parquet";
 import * as generators from "@dsnp/test-generators";
 import updateSchema from "./update";
 

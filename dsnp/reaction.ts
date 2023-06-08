@@ -1,6 +1,6 @@
-import { ParquetModel } from "../types/frequency";
+import { FrequencyParquetSchema } from "../types/frequency";
 
-const reaction: ParquetModel = [
+const reaction: FrequencyParquetSchema = [
   {
     name: "announcementType",
     column_type: {

@@ -1,3 +1,5 @@
+import { FrequencyParquetSchema } from "../types/frequency";
+
 import broadcast from "./broadcast";
 // Deprecated
 // import graphChange from "./dsnp/graphChange";
@@ -9,45 +11,59 @@ import publicKey from "./publicKey";
 import userPublicFollows from "./userPublicFollows";
 import userPrivateFollows from "./userPrivateFollows";
 import userPrivateConnections from "./userPrivateConnections";
-import { ParquetModel } from "../types/frequency";
 import update from "./update";
 
-type PayloadLocation = "IPFS" | "OnChain" | "Itemized" | "Paginated";
-type ModelType = "AvroBinary" | "Parquet";
+export {
+  broadcast,
+  profile,
+  reaction,
+  reply,
+  tombstone,
+  publicKey,
+  userPrivateFollows,
+  userPrivateConnections,
+  update,
+};
 
+type PayloadLocation = "IPFS" | "OnChain" | "Itemized" | "Paginated";
 type Settings = "AppendOnly" | "SignatureRequired";
 
-export type Deploy = {
-  model: ParquetModel | object;
-  modelType: ModelType;
+type ParquetDeploy = {
+  model: FrequencyParquetSchema;
+  modelType: "Parquet";
+  payloadLocation: "IPFS";
+  settings: [];
+};
+
+type AvroDeploy = {
+  model: object;
+  modelType: "AvroBinary";
   payloadLocation: PayloadLocation;
   settings: Settings[];
 };
 
+export type Deploy = ParquetDeploy | AvroDeploy;
+
+export type ParquetSchemaName = "broadcast" | "profile" | "reaction" | "reply" | "tombstone" | "update";
+export type AvroSchemaName = "publicKey" | "userPublicFollows" | "userPrivateFollows" | "userPrivateConnections";
+
+export type SchemaName = ParquetSchemaName | AvroSchemaName;
+
 // Map schema names (string) to deploy object
-export const dsnpSchemas = new Map<string, Deploy>([
+export const schemas = new Map<SchemaName, Deploy>([
+  [
+    "tombstone",
+    {
+      model: tombstone,
+      modelType: "Parquet",
+      payloadLocation: "IPFS",
+      settings: [],
+    },
+  ],
   [
     "broadcast",
     {
       model: broadcast,
-      modelType: "Parquet",
-      payloadLocation: "IPFS",
-      settings: [],
-    },
-  ],
-  [
-    "profile",
-    {
-      model: profile,
-      modelType: "Parquet",
-      payloadLocation: "IPFS",
-      settings: [],
-    },
-  ],
-  [
-    "reaction",
-    {
-      model: reaction,
       modelType: "Parquet",
       payloadLocation: "IPFS",
       settings: [],
@@ -63,14 +79,24 @@ export const dsnpSchemas = new Map<string, Deploy>([
     },
   ],
   [
-    "tombstone",
+    "reaction",
     {
-      model: tombstone,
+      model: reaction,
       modelType: "Parquet",
       payloadLocation: "IPFS",
       settings: [],
     },
   ],
+  [
+    "profile",
+    {
+      model: profile,
+      modelType: "Parquet",
+      payloadLocation: "IPFS",
+      settings: [],
+    },
+  ],
+
   [
     "update",
     {
@@ -80,12 +106,6 @@ export const dsnpSchemas = new Map<string, Deploy>([
       settings: [],
     },
   ],
-  // Deprecated
-  // ["graphChange", {
-  //   model: graphChange,
-  //   modelType: "Parquet",
-  //   payloadLocation: "IPFS"
-  // }],
   [
     "publicKey",
     {
@@ -124,6 +144,11 @@ export const dsnpSchemas = new Map<string, Deploy>([
   ],
 ]);
 
-export const getSchema = (name: string): Deploy | null => {
-  return dsnpSchemas.get(name) || null;
+export const getSchema = (name: SchemaName): Deploy | null => {
+  return schemas.get(name) || null;
+};
+
+export default {
+  schemas,
+  getSchema,
 };
