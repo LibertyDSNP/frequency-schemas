@@ -22,6 +22,7 @@ export {
   publicKey,
   userPrivateFollows,
   userPrivateConnections,
+  userPublicFollows,
   update,
 };
 
