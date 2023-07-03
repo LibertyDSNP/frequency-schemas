@@ -2,10 +2,12 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Base",
   "compilerOptions": {
+      "allowJs": true,
       "allowSyntheticDefaultImports": true,
+      "declaration": false,
       "esModuleInterop": true,
+      "lib": ["ES2022"],
       "moduleResolution": "node",
-      "module": "esnext",
       "noImplicitAny": true,
       "outDir": "dist",
       "resolveJsonModule": true,
