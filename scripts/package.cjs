@@ -33,21 +33,12 @@ rootPackage["exports"] = {
 };
 
 // Submodules
-["parquet"].forEach((sub) => {
+["parquet", "dsnp/index", "cli/deploy"].forEach((sub) => {
   rootPackage["exports"][`./${sub}`] = {
     types: `./${sub}.d.ts`,
     require: `./cjs/${sub}.js`,
     import: `./esm/${sub}.js`,
     default: `./esm/${sub}.js`,
-  };
-});
-
-["dsnp"].forEach((sub) => {
-  rootPackage["exports"][`./${sub}`] = {
-    types: `./${sub}/index.d.ts`,
-    require: `./cjs/${sub}/index.js`,
-    import: `./esm/${sub}/index.js`,
-    default: `./esm/${sub}/index.js`,
   };
 });
 
