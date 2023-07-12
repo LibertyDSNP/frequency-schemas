@@ -1,5 +1,5 @@
-import { getFrequencyAPI, getSignerAccountKeys } from "./services/connect";
-import dsnp, { SchemaName as DsnpSchemaName } from "../dsnp";
+import { getFrequencyAPI, getSignerAccountKeys } from "./services/connect.js";
+import dsnp, { SchemaName as DsnpSchemaName } from "../dsnp/index.js";
 import { EventRecord } from "@polkadot/types/interfaces";
 
 export const deploy = async () => {

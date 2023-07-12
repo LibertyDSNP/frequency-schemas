@@ -1,4 +1,4 @@
-import publicKeySchema from "./publicKey";
+import publicKeySchema from "./publicKey.js";
 import avro from "avro-js";
 
 describe("Public Key Schema", () => {

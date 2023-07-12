@@ -1,7 +1,7 @@
 import fs from "fs";
 import { ParquetWriter, ParquetReader } from "@dsnp/parquetjs";
-import { fromFrequencySchema } from "./parquet";
-import { broadcast } from "./dsnp";
+import { fromFrequencySchema } from "./parquet.js";
+import { broadcast } from "./dsnp/index.js";
 
 describe("Frequency Schema Conversion Test File", () => {
   const [parquetSchema, writerOptions] = fromFrequencySchema(broadcast);

@@ -1,4 +1,4 @@
-import { FrequencyParquetSchema } from "../types/frequency";
+import { FrequencyParquetSchema } from "../types/frequency.js";
 
 const tombstone: FrequencyParquetSchema = [
   {

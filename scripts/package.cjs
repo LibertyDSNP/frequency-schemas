@@ -33,7 +33,7 @@ rootPackage["exports"] = {
 };
 
 // Submodules
-["parquet", "dsnp/index", "cli/deploy"].forEach((sub) => {
+["parquet", "cli/deploy"].forEach((sub) => {
   rootPackage["exports"][`./${sub}`] = {
     types: `./${sub}.d.ts`,
     require: `./cjs/${sub}.js`,
@@ -41,6 +41,14 @@ rootPackage["exports"] = {
     default: `./esm/${sub}.js`,
   };
 });
+
+// DSNP module
+rootPackage["exports"][`./dsnp`] = {
+  types: `./dsnp/index.d.ts`,
+  require: `./cjs/dsnp/index.js`,
+  import: `./esm/dsnp/index.js`,
+  default: `./esm/dsnp/index.js`,
+};
 
 // Write it out
 fs.writeFileSync(`${path.join(__dirname, "../dist", "package.json")}`, JSON.stringify(rootPackage, null, 2), (err) => {

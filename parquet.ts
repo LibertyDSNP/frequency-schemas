@@ -1,8 +1,8 @@
 import { ParquetSchema } from "@dsnp/parquetjs";
 import type { ParquetType, FieldDefinition, SchemaDefinition, WriterOptions } from "@dsnp/parquetjs/dist/lib/declare";
 import type { createSBBFParams } from "@dsnp/parquetjs/dist/lib/bloomFilterIO/bloomFilterWriter";
-import { FrequencyParquetSchema, FrequencyParquetType, ParquetColumn } from "./types/frequency";
-import * as dsnp from "./dsnp";
+import { FrequencyParquetSchema, FrequencyParquetType, ParquetColumn } from "./types/frequency.js";
+import * as dsnp from "./dsnp/index.js";
 
 /**
  * All supported types from Parquetjs

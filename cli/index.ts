@@ -1,4 +1,4 @@
-import { deploy } from "./deploy";
+import { deploy } from "./deploy.js";
 
 export const main = async () => {
   await deploy();

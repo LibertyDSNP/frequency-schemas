@@ -1,6 +1,6 @@
-import { testCompression, testParquetSchema } from "../test/parquet";
+import { testCompression, testParquetSchema } from "../test/parquet.js";
 import * as generators from "@dsnp/test-generators";
-import broadcastSchema from "./broadcast";
+import broadcastSchema from "./broadcast.js";
 
 describe("Broadcast Spec", () => {
   testParquetSchema(broadcastSchema);
