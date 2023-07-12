@@ -52,5 +52,6 @@
       }
     ],
     "allow-namespace": "off",
+    "import/extensions": ["error", "always", { "ignorePackages": true } ]
   }
 }

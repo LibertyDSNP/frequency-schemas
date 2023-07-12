@@ -1,4 +1,4 @@
-import privateConnectionsSchema from "./userPrivateConnections";
+import privateConnectionsSchema from "./userPrivateConnections.js";
 import avro from "avro-js";
 
 describe("Private Connections Schema", () => {

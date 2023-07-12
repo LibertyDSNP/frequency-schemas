@@ -1,8 +1,8 @@
 /* eslint-disable jest/no-export */
 import fs from "fs";
 import { ParquetWriter } from "@dsnp/parquetjs";
-import { FrequencyParquetSchema } from "../types/frequency";
-import { fromFrequencySchema } from "../parquet";
+import { FrequencyParquetSchema } from "../types/frequency.js";
+import { fromFrequencySchema } from "../parquet.js";
 
 type RowGenerator = () => Record<string, unknown>;
 

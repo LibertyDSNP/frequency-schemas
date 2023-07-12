@@ -1,8 +1,8 @@
-import { getEndpoint, getFrequencyAPI } from "./services/connect";
+import { getEndpoint, getFrequencyAPI } from "./services/connect.js";
 
 import stringify from "json-stringify-pretty-compact";
 
-import { schemas } from "../dsnp";
+import { schemas } from "../dsnp/index.js";
 
 const nameAndSchema = Array.from(schemas.entries(), ([k, v]) => [`dsnp.${k}`, JSON.stringify(v.model)]);
 

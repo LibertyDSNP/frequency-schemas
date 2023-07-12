@@ -1,6 +1,6 @@
-import { testCompression, testParquetSchema } from "../test/parquet";
+import { testCompression, testParquetSchema } from "../test/parquet.js";
 import * as generators from "@dsnp/test-generators";
-import tombstoneSchema from "./tombstone";
+import tombstoneSchema from "./tombstone.js";
 
 describe("Tombstone Spec", () => {
   testParquetSchema(tombstoneSchema);

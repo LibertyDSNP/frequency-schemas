@@ -1,4 +1,4 @@
-import privateFollowsSchema from "./userPrivateFollows";
+import privateFollowsSchema from "./userPrivateFollows.js";
 import avro from "avro-js";
 
 describe("Private Follows Schema", () => {

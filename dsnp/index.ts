@@ -1,17 +1,17 @@
-import { FrequencyParquetSchema } from "../types/frequency";
+import { FrequencyParquetSchema } from "../types/frequency.js";
 
-import broadcast from "./broadcast";
+import broadcast from "./broadcast.js";
 // Deprecated
-// import graphChange from "./dsnp/graphChange";
-import profile from "./profile";
-import reaction from "./reaction";
-import reply from "./reply";
-import tombstone from "./tombstone";
-import publicKey from "./publicKey";
-import userPublicFollows from "./userPublicFollows";
-import userPrivateFollows from "./userPrivateFollows";
-import userPrivateConnections from "./userPrivateConnections";
-import update from "./update";
+// import graphChange from "./dsnp/graphChange.js";
+import profile from "./profile.js";
+import reaction from "./reaction.js";
+import reply from "./reply.js";
+import tombstone from "./tombstone.js";
+import publicKey from "./publicKey.js";
+import userPublicFollows from "./userPublicFollows.js";
+import userPrivateFollows from "./userPrivateFollows.js";
+import userPrivateConnections from "./userPrivateConnections.js";
+import update from "./update.js";
 
 export {
   broadcast,

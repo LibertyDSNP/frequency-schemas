@@ -1,6 +1,6 @@
-import { testCompression, testParquetSchema } from "../test/parquet";
+import { testCompression, testParquetSchema } from "../test/parquet.js";
 import * as generators from "@dsnp/test-generators";
-import profileSchema from "./profile";
+import profileSchema from "./profile.js";
 
 describe("Profile Spec", () => {
   testParquetSchema(profileSchema);

@@ -1,4 +1,4 @@
-import graphChangeSchema from "./graphChange";
+import graphChangeSchema from "./graphChange.js";
 import avro from "avro-js";
 
 describe("Graph Change Schema", () => {
