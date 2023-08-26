@@ -25,4 +25,7 @@ whoami
 cd frequency/schemas
 npm run deploy
 
+touch successTouchFile
+echo "CREATED TOUCHFILE"
+
 fg %1
