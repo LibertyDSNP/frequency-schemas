@@ -20,6 +20,7 @@ whoami
     --ws-external \
     --rpc-methods=Unsafe \
     --base-path=/data \
+    --rpc-max-subscriptions-per-connection 10 \
     &
 
 cd frequency/schemas
