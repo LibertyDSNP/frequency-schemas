@@ -42,7 +42,7 @@ export const deploy = async () => {
 
   console.log("Deploy of Schemas Starting...");
 
-  await createSchemas(schemaNames);
+  return await createSchemas(schemaNames);
 };
 
 // Given a list of events, a section and a method,
@@ -54,7 +54,12 @@ const eventWithSectionAndMethod = (events: EventRecord[], section: string, metho
 
 // Given a list of schema names, attempt to create them with the chain.
 const createSchemas = async (schemaNames: string[]) => {
-  const promises: Promise<void>[] = [];
+  type SchemaInfo = {
+    schemaName: string;
+    id?: number;
+  };
+
+  const promises: Promise<SchemaInfo>[] = [];
   const api = await getFrequencyAPI();
   const signerAccountKeys = getSignerAccountKeys();
   // Mainnet genesis hash means we should propose instead of create
@@ -85,7 +90,7 @@ const createSchemas = async (schemaNames: string[]) => {
 
     if (shouldPropose) {
       // Propose to create
-      const promise = new Promise<void>((resolve, reject) => {
+      const promise = new Promise<SchemaInfo>((resolve, reject) => {
         api.tx.schemas
           .proposeToCreateSchema(
             json_no_ws,
@@ -104,8 +109,8 @@ const createSchemas = async (schemaNames: string[]) => {
                 const id = evt?.data[1];
                 const hash = evt?.data[2].toHex();
                 console.log("SUCCESS: " + schemaName + " schema proposed with id of " + id + " and hash of " + hash);
-              }
-              resolve();
+                resolve({ schemaName, id: Number(id.toHuman()) });
+              } else resolve({ schemaName });
             }
           });
       });
@@ -119,7 +124,7 @@ const createSchemas = async (schemaNames: string[]) => {
         schemaDeploy.payloadLocation,
         schemaDeploy.settings
       );
-      const promise = new Promise<void>((resolve, reject) => {
+      const promise = new Promise<SchemaInfo>((resolve, reject) => {
         api.tx.sudo.sudo(tx).signAndSend(signerAccountKeys, { nonce }, ({ status, events, dispatchError }) => {
           if (dispatchError) {
             console.error("ERROR: ", dispatchError.toHuman());
@@ -129,8 +134,8 @@ const createSchemas = async (schemaNames: string[]) => {
             if (evt) {
               const val = evt?.data[1];
               console.log("SUCCESS: " + schemaName + " schema created with id of " + val);
-            }
-            resolve();
+              resolve({ schemaName, id: Number(val.toHuman()) });
+            } else resolve({ schemaName });
           }
         });
       });
