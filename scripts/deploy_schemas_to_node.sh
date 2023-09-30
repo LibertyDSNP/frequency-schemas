@@ -13,11 +13,9 @@ whoami
     --no-telemetry \
     --no-prometheus \
     --port=30333 \
-    --rpc-port=9933 \
-    --ws-port=9944 \
+    --rpc-port=9944 \
     --rpc-external \
     --rpc-cors=all \
-    --ws-external \
     --rpc-methods=Unsafe \
     --base-path=/data \
     &
