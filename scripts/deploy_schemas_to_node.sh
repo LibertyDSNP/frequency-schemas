@@ -12,7 +12,6 @@ whoami
     --sealing=instant \
     --no-telemetry \
     --no-prometheus \
-    --port=30333 \
     --rpc-port=9944 \
     --rpc-external \
     --rpc-cors=all \
