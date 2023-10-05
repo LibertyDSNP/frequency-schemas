@@ -16,7 +16,7 @@ RUN apt-get update \
 
 # Install node-js to base image
 RUN apt-get update && apt-get install -y curl gnupg \
-        && curl -sL https://deb.nodesource.com/setup_16.x | bash \
+        && curl -sL https://deb.nodesource.com/setup_18.x | bash \
         && apt-get update && apt-get install -y nodejs \
         && rm -rf /var/lib/apt/lists/*
 
@@ -40,15 +40,13 @@ ENV TINI_VERSION v0.19.0
 ADD --chown=frequency https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 RUN chmod +x /tini
 
-# 9933 P2P port
-# 9944 for RPC call
-# 30333 for Websocket
-EXPOSE 9933 9944 30333
+# 9944 for RPC/Websocket
+EXPOSE 9944
 
 VOLUME ["/data"]
 
 HEALTHCHECK --start-period=15s \
-  CMD curl --fail -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "rpc_methods"}' http://localhost:9933/ || exit 1
+  CMD curl --fail -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "rpc_methods"}' http://localhost:9944/ || exit 1
 
 ENTRYPOINT ["/tini", "--"]
 
