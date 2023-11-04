@@ -46,7 +46,12 @@ type AvroDeploy = {
 export type Deploy = ParquetDeploy | AvroDeploy;
 
 export type ParquetSchemaName = "broadcast" | "profile" | "reaction" | "reply" | "tombstone" | "update";
-export type AvroSchemaName = "publicKey" | "userPublicFollows" | "userPrivateFollows" | "userPrivateConnections";
+export type AvroSchemaName =
+  | "publicKey_keyAgreement"
+  | "publicKey_assertionMethod"
+  | "userPublicFollows"
+  | "userPrivateFollows"
+  | "userPrivateConnections";
 
 export type SchemaName = ParquetSchemaName | AvroSchemaName;
 
@@ -108,7 +113,7 @@ export const schemas = new Map<SchemaName, Deploy>([
     },
   ],
   [
-    "publicKey",
+    "publicKey_keyAgreement",
     {
       model: publicKey,
       modelType: "AvroBinary",
@@ -141,6 +146,15 @@ export const schemas = new Map<SchemaName, Deploy>([
       modelType: "AvroBinary",
       payloadLocation: "Paginated",
       settings: [],
+    },
+  ],
+  [
+    "publicKey_assertionMethod",
+    {
+      model: publicKey,
+      modelType: "AvroBinary",
+      payloadLocation: "Itemized",
+      settings: ["AppendOnly", "SignatureRequired"],
     },
   ],
 ]);
