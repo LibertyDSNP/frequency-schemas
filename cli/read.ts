@@ -43,7 +43,7 @@ const read = async () => {
         payload_location,
         matchesDSNPSchemas,
         settings,
-      }).map(([key, value]) => ({ key, value: value && value.toHuman ? value.toHuman() : value }))
+      }).map(([key, value]) => ({ key, value: value && value.toHuman ? value.toHuman() : value })),
     );
     console.log("\n## Schema Model");
     console.log(stringify(modelParsed));
