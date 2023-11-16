@@ -106,7 +106,7 @@ const toSchema = (frequencySchema: FrequencyParquetSchema): SchemaDefinition => 
  * Also provides the Writer Options as Frequency Schemas support bloom filter selection.
  */
 export const fromFrequencySchema = (
-  frequencySchema: FrequencyParquetSchema | dsnp.ParquetSchemaName
+  frequencySchema: FrequencyParquetSchema | dsnp.ParquetSchemaName,
 ): [ParquetSchema, WriterOptions] => {
   if (typeof frequencySchema === "string") {
     const deploy = dsnp.getSchema(frequencySchema);

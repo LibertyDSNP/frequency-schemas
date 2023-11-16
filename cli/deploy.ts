@@ -21,7 +21,7 @@ export const deploy = async () => {
         "",
         'Example: DEPLOY_SCHEMA_ACCOUNT_URI="//Bob" DEPLOY_SCHEMA_ENDPOINT_URL="ws://127.0.0.1:9944" npm run deploy',
         "",
-      ].join("\n")
+      ].join("\n"),
     );
     console.log("Available Schemas:\n-", [...dsnp.schemas.keys()].join("\n- "));
     process.exit();
@@ -96,7 +96,7 @@ const createSchemas = async (schemaNames: string[]) => {
             json_no_ws,
             schemaDeploy.modelType,
             schemaDeploy.payloadLocation,
-            schemaDeploy.settings
+            schemaDeploy.settings,
           )
           .signAndSend(signerAccountKeys, { nonce }, ({ status, events, dispatchError }) => {
             if (dispatchError) {
@@ -122,7 +122,7 @@ const createSchemas = async (schemaNames: string[]) => {
         json_no_ws,
         schemaDeploy.modelType,
         schemaDeploy.payloadLocation,
-        schemaDeploy.settings
+        schemaDeploy.settings,
       );
       const promise = new Promise<SchemaInfo>((resolve, reject) => {
         api.tx.sudo.sudo(tx).signAndSend(signerAccountKeys, { nonce }, ({ status, events, dispatchError }) => {

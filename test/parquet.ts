@@ -16,7 +16,7 @@ export const testParquetSchema = async (model: FrequencyParquetSchema) => {
           write: jest.fn(),
           end: jest.fn(),
         },
-        options
+        options,
       );
     }).not.toThrow();
   });
@@ -39,7 +39,7 @@ const generateParquetTestFileSize = async (
   name: string,
   rawSchema: FrequencyParquetSchema,
   count: number,
-  rowGenerator: RowGenerator
+  rowGenerator: RowGenerator,
 ): Promise<number> => {
   const [schema, options] = fromFrequencySchema(rawSchema);
   const path = `./test-${name}-size.parquet`;
