@@ -7,6 +7,7 @@
     "test": "jest",
     "deploy": "node --loader ts-node/esm cli/index.ts",
     "read": "node --loader ts-node/esm cli/read.ts",
+    "find": "node --loader ts-node/esm cli/find.ts",
     "clean": "rm -Rf dist",
     "format": "tsc -p ./tsconfig.eslint.json --noEmit --pretty && eslint --fix \"**/*.ts\"",
     "lint": "tsc -p ./tsconfig.eslint.json --noEmit --pretty && eslint \"**/*.ts\"",
@@ -26,7 +27,7 @@
   },
   "homepage": "https://github.com/LibertyDSNP/schemas#readme",
   "dependencies": {
-    "@frequency-chain/api-augment": "^1.8.1",
+    "@frequency-chain/api-augment": "^0.0.0-701a0b",
     "@polkadot/api": "^10.7.3",
     "json-stringify-pretty-compact": "^4.0.0",
     "ts-node": "^10.9.1",

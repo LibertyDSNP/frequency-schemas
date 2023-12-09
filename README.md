@@ -17,6 +17,30 @@ import { dsnp } from "frequency-schemas";
 console.log(dsnp.getSchema("broadcast"));
 ```
 
+### Get Schema Id from Chain
+
+```typescript
+import { dsnp } from "frequency-schemas";
+import { ApiPromise } from "@polkadot/api";
+
+const api = ApiPromise.create(/* ... */);
+console.log(await dsnp.getSchemaId(api, "broadcast"));
+```
+
+Frequency mainnet and testnet have well-known Ids defined in `dsnp/index.ts`.
+Other configurations default to assuming `npm run deploy` has been run on a fresh chain (which is usually the case for a localhost instance), but can be overridden:
+
+```
+dsnp.setSchemaMapping(api.genesisHash.toString(), {
+  // format is dsnpName: { version: schemaId, ... }
+  "tombstone": { "1.2": 64 },
+  "broadcast": { "1.2": 67 },
+  // ...
+});
+
+console.log(await dsnp.getSchemaId(api, "broadcast")); // yields 67
+```
+
 ### With Parquet Writer
 
 ```sh
@@ -148,6 +172,14 @@ There are 8 schemas on the connected chain.
   }
 ]
 ...
+```
+
+## Find Frequency Schema Ids that Match DSNP Schema Versions
+
+This script will look up and verify schemas in the schema registry that match the DSNP names and versions defined in `dsnp/index.ts`.
+
+```sh
+DEPLOY_SCHEMA_ENDPOINT_URL="ws://127.0.0.1:9944" npm run find
 ```
 
 ## Use with Docker
