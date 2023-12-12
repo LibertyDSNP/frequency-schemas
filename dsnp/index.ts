@@ -226,10 +226,10 @@ chainMapping[GENESIS_HASH_MAINNET] = {
   // TBD "public-key-assertion-method": { "1.3": 11? },
 };
 /*
- * For now, "default" deployments (e.g. to a clean local chain) look
- * like mainnet (except for any schemas in development), but this
- * might eventually get out of sync.  If you have a non-standard
- * deployment, call `setSchemaMapping()` manually.
+ * Schema in "default" deployments (e.g. to a clean local chain) are
+ * numbered according to the `schemas` array (beginning with 1).  If
+ * you have a non-standard deployment, call `setSchemaMapping()`
+ * manually.
  */
 chainMapping["default"] = {
   tombstone: { "1.2": 1 },
