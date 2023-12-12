@@ -6,9 +6,12 @@ const find = async () => {
 
   console.log("\n## DSNP Schema Information");
 
+  const allDsnp = (await api.rpc.schemas.getVersions("dsnp")).unwrap();
   for (const schemaEntry of schemas.entries()) {
     const schemaString = JSON.stringify(schemaEntry[1].model);
-    const schemaVersionResult = (await api.rpc.schemas.getVersions("dsnp." + schemaEntry[0])).unwrap();
+    const schemaVersionResult = allDsnp.filter(
+      (versioned) => versioned.schema_name.toString() === "dsnp." + schemaEntry[0],
+    );
     for (const version of schemaVersionResult) {
       const schemaResult = (await api.rpc.schemas.getBySchemaId(version.schema_id.toString())).unwrap();
       const jsonSchema = Buffer.from(schemaResult.model).toString("utf8");

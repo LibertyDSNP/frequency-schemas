@@ -31,7 +31,17 @@ export {
 type PayloadLocation = "IPFS" | "OnChain" | "Itemized" | "Paginated";
 type Settings = "AppendOnly" | "SignatureRequired";
 
-// Note: Schema should be retained for versions with published data on mainnet
+/*
+ * DSNP versions are different from named schema versions on
+ * Frequency. They refer to the first version of the DSNP
+ * specification where the relevant form of the data type is
+ * defined. It may be necessary for future applications to support
+ * "schema evolution" of DSNP data types by processing both old and
+ * new Frequency Schema Ids.
+ *
+ * Only those DSNP versions that define types with corresponding data
+ * on mainnet are noted here.
+ */
 export type DSNPVersion = "1.1" | "1.2" | "1.3";
 
 type ParquetDeploy = {
@@ -194,8 +204,8 @@ chainMapping[GENESIS_HASH_TESTNET] = {
   broadcast: { "1.2": 2 },
   reply: { "1.2": 3 },
   reaction: { "1.1": 4 },
-  profile: { "1.2": 6 },
-  update: { "1.2": 5 },
+  profile: { "1.2": 5 },
+  update: { "1.2": 6 },
   "public-key-key-agreement": { "1.2": 18 },
   "public-follows": { "1.2": 13 },
   "private-follows": { "1.2": 14 },
@@ -207,8 +217,8 @@ chainMapping[GENESIS_HASH_MAINNET] = {
   broadcast: { "1.2": 2 },
   reply: { "1.2": 3 },
   reaction: { "1.1": 4 },
-  profile: { "1.2": 5 },
-  update: { "1.2": 6 },
+  profile: { "1.2": 6 },
+  update: { "1.2": 5 },
   "public-key-key-agreement": { "1.2": 7 },
   "public-follows": { "1.2": 8 },
   "private-follows": { "1.2": 9 },
@@ -216,9 +226,10 @@ chainMapping[GENESIS_HASH_MAINNET] = {
   // TBD "public-key-assertion-method": { "1.3": 11? },
 };
 /*
- * For now, "default" deployments (e.g. to a clean local chain) look like mainnet
- * (except for any schemas in development), but this might eventually get out of sync.
- * If you have a non-standard deployment, call `setSchemaMapping()` manually.
+ * For now, "default" deployments (e.g. to a clean local chain) look
+ * like mainnet (except for any schemas in development), but this
+ * might eventually get out of sync.  If you have a non-standard
+ * deployment, call `setSchemaMapping()` manually.
  */
 chainMapping["default"] = {
   tombstone: { "1.2": 1 },
@@ -235,9 +246,10 @@ chainMapping["default"] = {
 };
 
 /**
- * Gets the schemaId from the Frequency instance configured for apiPromise
- * for the given DSNP type and version. If version is unspecified, the latest
- * version is returned. (You probably only need version if you're migrating.)
+ * Gets the schemaId from the Frequency instance configured for
+ * apiPromise for the given DSNP type and version. If version is
+ * unspecified, the latest version is returned. (You probably only
+ * need version if you're migrating.)
  */
 export const getSchemaId = async (
   apiPromise: Promise<ApiPromise>,
