@@ -7,17 +7,8 @@ npm --version
 ldd --version
 whoami
 
-/frequency/frequency --dev \
-    -lruntime=debug \
-    --sealing=instant \
-    --no-telemetry \
-    --no-prometheus \
-    --rpc-port=9944 \
-    --rpc-external \
-    --rpc-cors=all \
-    --rpc-methods=Unsafe \
-    --base-path=/data \
-    &
+# Base image start script
+/frequency/frequency-start.sh &
 
 cd frequency/schemas
 npm run deploy

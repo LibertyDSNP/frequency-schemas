@@ -152,7 +152,8 @@ There are 8 schemas on the connected chain.
 
 ## Use with Docker
 
-This repo includes a docker image to push a [Frequency instant-seal-node](https://hub.docker.com/r/frequencychain/instant-seal-node) with the schemas deployed on top of it to docker hub under `dsnp/instant-seal-node-with-deployed-schemas`.
+This repo deploys `dsnp/instant-seal-node-with-deployed-schemas` to Docker Hub.
+It is based on a [Frequency Standalone Docker](https://hub.docker.com/r/frequencychain/standalone-node) with the schemas automatically deployed on top of it.
 
 
 ### Run Locally
@@ -162,6 +163,8 @@ For any local testing do the following:
 
 ### Build Locally
 1. `docker build -t dsnp/instant-seal-node-with-deployed-schemas:latest -t dsnp/instant-seal-node-with-deployed-schemas:<versionNumberHere> .`
+
+Note: `--platform=linux/amd64` is required as `frequencychain` images are only published for the `linux/amd64` platform.
 
 ### Pushing Docker Image
 
