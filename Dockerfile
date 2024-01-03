@@ -46,7 +46,7 @@ EXPOSE 9944
 VOLUME ["/data"]
 
 HEALTHCHECK --start-period=15s \
-  CMD curl --fail -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "rpc_methods"}' http://localhost:9944/ || exit 1
+  CMD curl --silent --fail -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "schemas_getBySchemaId", "params": [11]}' http://localhost:9944/ | grep -qv '{"jsonrpc":"2.0","result":null,"id":1}' || exit 1
 
 ENTRYPOINT ["/tini", "--"]
 
