@@ -153,18 +153,17 @@ There are 8 schemas on the connected chain.
 ## Use with Docker
 
 This repo deploys `dsnp/instant-seal-node-with-deployed-schemas` to Docker Hub.
-It is based on a [Frequency Standalone Docker](https://hub.docker.com/r/frequencychain/standalone-node) with the schemas automatically deployed on top of it.
+It is based on a [Frequency Standalone Docker](https://hub.docker.com/r/frequencychain/standalone-node) with the schemas automatically deployed on top of it with the image defaults including using "instant sealing" mode.
 
+Note: `--platform=linux/amd64` is because as `frequencychain` images are only published for the `linux/amd64` platform.
 
 ### Run Locally
 For any local testing do the following:
-1. `docker pull dsnp/instant-seal-node-with-deployed-schemas:latest`
-2. `docker run docker run --rm -p 9944:9944 dsnp/instant-seal-node-with-deployed-schemas:latest`
+1. `docker pull --platform=linux/amd64 dsnp/instant-seal-node-with-deployed-schemas:latest`
+2. `docker run  --platform=linux/amd64 --rm -p 9944:9944 dsnp/instant-seal-node-with-deployed-schemas:latest`
 
 ### Build Locally
-1. `docker build -t dsnp/instant-seal-node-with-deployed-schemas:latest -t dsnp/instant-seal-node-with-deployed-schemas:<versionNumberHere> .`
-
-Note: `--platform=linux/amd64` is required as `frequencychain` images are only published for the `linux/amd64` platform.
+1. `docker build --platform=linux/amd64 -t dsnp/instant-seal-node-with-deployed-schemas:latest -t dsnp/instant-seal-node-with-deployed-schemas:<versionNumberHere> .`
 
 ### Pushing Docker Image
 
