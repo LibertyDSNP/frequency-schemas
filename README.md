@@ -12,7 +12,7 @@ npm install @dsnp/frequency-schemas
 ### Use Schema
 
 ```typescript
-import { dsnp } from "frequency-schemas";
+import { dsnp } from "@dsnp/frequency-schemas";
 
 console.log(dsnp.getSchema("broadcast"));
 ```
@@ -20,7 +20,7 @@ console.log(dsnp.getSchema("broadcast"));
 ### Get Schema Id from Chain
 
 ```typescript
-import { dsnp } from "frequency-schemas";
+import { dsnp } from "@dsnp/frequency-schemas";
 import { ApiPromise } from "@polkadot/api";
 
 const api = ApiPromise.create(/* ... */);
@@ -48,7 +48,7 @@ npm install @dsnp/parquetjs
 ```
 
 ```typescript
-import { parquet } from "frequency-schemas";
+import { parquet } from "@dsnp/frequency-schemas";
 import { ParquetWriter } from "@dsnp/parquetjs";
 
 const [parquetSchema, writerOptions] = parquet.fromFrequencySchema("broadcast");
