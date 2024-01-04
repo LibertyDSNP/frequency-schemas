@@ -100,7 +100,7 @@ const createSchemas = async (schemaNames: string[]) => {
             if (dispatchError) {
               console.error("ERROR: ", dispatchError.toHuman());
               console.log("Might already have a proposal with the same hash?");
-              reject();
+              reject(dispatchError.toHuman());
             } else if (status.isInBlock || status.isFinalized) {
               const evt = eventWithSectionAndMethod(events, "council", "Proposed");
               if (evt) {
@@ -110,8 +110,9 @@ const createSchemas = async (schemaNames: string[]) => {
                 const v2n = Object.fromEntries([[schemaDeploy.dsnpVersion, Number(id.toHuman())]]);
                 resolve([schemaName as DsnpSchemaName, v2n]);
               } else {
-                console.error("ERROR: Proposed event not found");
-                reject();
+                const err = "Proposed event not found";
+                console.error(`ERROR: ${err}`);
+                reject(err);
               }
             }
           });
@@ -131,7 +132,7 @@ const createSchemas = async (schemaNames: string[]) => {
         api.tx.sudo.sudo(tx).signAndSend(signerAccountKeys, { nonce }, ({ status, events, dispatchError }) => {
           if (dispatchError) {
             console.error("ERROR: ", dispatchError.toHuman());
-            reject();
+            reject(dispatchError.toHuman());
           } else if (status.isInBlock || status.isFinalized) {
             const evt = eventWithSectionAndMethod(events, "schemas", "SchemaCreated");
             if (evt) {
@@ -140,8 +141,9 @@ const createSchemas = async (schemaNames: string[]) => {
               const v2n = Object.fromEntries([[schemaDeploy.dsnpVersion, Number(id.toHuman())]]);
               resolve([schemaName as DsnpSchemaName, v2n]);
             } else {
-              console.error("ERROR: SchemaCreated event not found");
-              reject();
+              const err = "SchemaCreated event not found";
+              console.error(`ERROR: ${err}`);
+              reject(err);
             }
           }
         });
