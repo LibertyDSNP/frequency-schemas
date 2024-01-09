@@ -1,5 +1,5 @@
 import { getFrequencyAPI, getSignerAccountKeys } from "./services/connect.js";
-import dsnp, { SchemaName as DsnpSchemaName } from "../dsnp/index.js";
+import dsnp, { SchemaName as DsnpSchemaName, SchemaMapping, GENESIS_HASH_MAINNET } from "../dsnp/index.js";
 import { EventRecord } from "@polkadot/types/interfaces";
 
 export const deploy = async () => {
@@ -42,7 +42,8 @@ export const deploy = async () => {
 
   console.log("Deploy of Schemas Starting...");
 
-  return await createSchemas(schemaNames);
+  const mapping = await createSchemas(schemaNames);
+  console.log("Generated schema mapping:\n", JSON.stringify(mapping, null, 2));
 };
 
 // Given a list of events, a section and a method,
@@ -54,17 +55,13 @@ const eventWithSectionAndMethod = (events: EventRecord[], section: string, metho
 
 // Given a list of schema names, attempt to create them with the chain.
 const createSchemas = async (schemaNames: string[]) => {
-  type SchemaInfo = {
-    schemaName: string;
-    id?: number;
-  };
+  type SchemaInfo = [schemaName: DsnpSchemaName, { [version: string]: number }];
 
   const promises: Promise<SchemaInfo>[] = [];
   const api = await getFrequencyAPI();
   const signerAccountKeys = getSignerAccountKeys();
   // Mainnet genesis hash means we should propose instead of create
-  const shouldPropose =
-    api.genesisHash.toHex() === "0x4a587bf17a404e3572747add7aab7bbe56e805a5479c6c436f07f36fcc8d3ae1";
+  const shouldPropose = api.genesisHash.toHex() === GENESIS_HASH_MAINNET;
 
   if (shouldPropose && schemaNames.length > 1) {
     console.error("Proposing to create schemas can only occur one at a time. Please try again with only one schema.");
@@ -92,55 +89,70 @@ const createSchemas = async (schemaNames: string[]) => {
       // Propose to create
       const promise = new Promise<SchemaInfo>((resolve, reject) => {
         api.tx.schemas
-          .proposeToCreateSchema(
+          .proposeToCreateSchemaV2(
             json_no_ws,
             schemaDeploy.modelType,
             schemaDeploy.payloadLocation,
             schemaDeploy.settings,
+            "dsnp." + schemaName,
           )
           .signAndSend(signerAccountKeys, { nonce }, ({ status, events, dispatchError }) => {
             if (dispatchError) {
               console.error("ERROR: ", dispatchError.toHuman());
               console.log("Might already have a proposal with the same hash?");
-              reject();
+              reject(dispatchError.toHuman());
             } else if (status.isInBlock || status.isFinalized) {
               const evt = eventWithSectionAndMethod(events, "council", "Proposed");
               if (evt) {
                 const id = evt?.data[1];
                 const hash = evt?.data[2].toHex();
                 console.log("SUCCESS: " + schemaName + " schema proposed with id of " + id + " and hash of " + hash);
-                resolve({ schemaName, id: Number(id.toHuman()) });
-              } else resolve({ schemaName });
+                const v2n = Object.fromEntries([[schemaDeploy.dsnpVersion, Number(id.toHuman())]]);
+                resolve([schemaName as DsnpSchemaName, v2n]);
+              } else {
+                const err = "Proposed event not found";
+                console.error(`ERROR: ${err}`);
+                reject(err);
+              }
             }
           });
       });
       promises[idx] = promise;
     } else {
       // Create directly via sudo
-      const tx = api.tx.schemas.createSchemaViaGovernance(
+      const tx = api.tx.schemas.createSchemaViaGovernanceV2(
         signerAccountKeys.address,
         json_no_ws,
         schemaDeploy.modelType,
         schemaDeploy.payloadLocation,
         schemaDeploy.settings,
+        "dsnp." + schemaName,
       );
       const promise = new Promise<SchemaInfo>((resolve, reject) => {
         api.tx.sudo.sudo(tx).signAndSend(signerAccountKeys, { nonce }, ({ status, events, dispatchError }) => {
           if (dispatchError) {
             console.error("ERROR: ", dispatchError.toHuman());
-            reject();
+            reject(dispatchError.toHuman());
           } else if (status.isInBlock || status.isFinalized) {
             const evt = eventWithSectionAndMethod(events, "schemas", "SchemaCreated");
             if (evt) {
-              const val = evt?.data[1];
-              console.log("SUCCESS: " + schemaName + " schema created with id of " + val);
-              resolve({ schemaName, id: Number(val.toHuman()) });
-            } else resolve({ schemaName });
+              const id = evt?.data[1];
+              console.log("SUCCESS: " + schemaName + " schema created with id of " + id);
+              const v2n = Object.fromEntries([[schemaDeploy.dsnpVersion, Number(id.toHuman())]]);
+              resolve([schemaName as DsnpSchemaName, v2n]);
+            } else {
+              const err = "SchemaCreated event not found";
+              console.error(`ERROR: ${err}`);
+              reject(err);
+            }
           }
         });
       });
       promises[idx] = promise;
     }
   }
-  return Promise.all(promises);
+  const output = await Promise.all(promises);
+  const mapping: { [genesisHash: string]: SchemaMapping } = {};
+  mapping[api.genesisHash.toString()] = Object.fromEntries(output);
+  return mapping;
 };
