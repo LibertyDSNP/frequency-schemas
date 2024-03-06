@@ -31,7 +31,7 @@ jobs:
           file: Dockerfile
           tags: |
             dsnp/instant-seal-node-with-deployed-schemas:${{ env.TAG }}
-            dsnp/instant-seal-node-with-deployed-schemas:latest
+#            dsnp/instant-seal-node-with-deployed-schemas:latest
 
 
       - name: Image digests

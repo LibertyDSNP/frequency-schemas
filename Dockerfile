@@ -2,7 +2,7 @@
 # locally in instant seal mode then deploying schemas to that node.
 
 #This pulls the latest standalone-node image
-FROM frequencychain/standalone-node:latest as frequency-image
+FROM frequencychain/standalone-node:v1.11.0-rc1 as frequency-image
 
 #Switch to root to install node on image
 USER root
