@@ -48,7 +48,4 @@ VOLUME ["/data"]
 HEALTHCHECK --start-period=15s \
   CMD curl --silent --fail -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "schemas_getBySchemaId", "params": [11]}' http://localhost:9944/ | grep -qv '{"jsonrpc":"2.0","result":null,"id":1}' || exit 1
 
-ENTRYPOINT ["/tini", "--"]
-
-# Params which can be overriden from CLI
-CMD ["/bin/bash", "frequency/deploy_schemas_to_node.sh"]
+ENTRYPOINT ["/tini", "--", "frequency/deploy_schemas_to_node.sh"]

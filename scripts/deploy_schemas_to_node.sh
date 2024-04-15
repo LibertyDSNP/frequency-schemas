@@ -8,7 +8,7 @@ ldd --version
 whoami
 
 # Base image start script
-/frequency/frequency-start.sh &
+/frequency/frequency-start.sh $* &
 
 cd frequency/schemas
 npm run deploy
