@@ -201,7 +201,7 @@ For any local testing do the following:
 
 To match with the Frequency version, a new tag should be pushed to update the docker version of this image each time frequency releases a new version.
 The following steps explain how to properly do a release for this.
-1. Go to the [Frequency repo](https://github.com/LibertyDSNP/frequency/releases) to see what the latest release version is.
+1. Go to the [Frequency repo](https://github.com/frequency-chain/frequency/releases) to see what the latest release version is.
 2. In this repo, check that main is properly [passing its tests and building here](https://github.com/LibertyDSNP/schemas/actions)
 3. Go to main: `git checkout main && git pull --rebase`
 4. Make sure to pull all latest tags as well: `git pull --tags`
