@@ -126,7 +126,7 @@ Will output various information about the schemas on the chain as well as attemp
 ├─────────┼─────────────────────┼────────────────────────────────────────────┤
 │    0    │    'endpointUrl'    │ 'wss://frequency-seal.liberti.social:9944' │
 │    1    │   'clientVersion'   │            '0.1.0-377bbe37fbe'             │
-│    2    │     'specName'      │             'frequency-rococo'             │
+│    2    │     'specName'      │             'frequency'                    │
 │    3    │    'specVersion'    │                    '1'                     │
 │    4    │ 'latestBlockNumber' │                    '16'                    │
 └─────────┴─────────────────────┴────────────────────────────────────────────┘
