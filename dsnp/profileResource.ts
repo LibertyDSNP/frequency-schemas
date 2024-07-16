@@ -10,14 +10,14 @@ export default {
       doc: "Type of resource",
     },
     {
-      name: "cid",
+      name: "contentHash",
       type: "bytes",
-      doc: "Content IDentifier of resource",
+      doc: "Multihash digest of resource content",
     },
     {
       name: "length",
       type: "int",
-      doc: "Length of document in bytes",
+      doc: "Length of resource in bytes",
     },
   ],
 };
