@@ -1,7 +1,8 @@
 import { UserDataType, descriptorForUserDataType } from "@dsnp/schemas";
+import type { Schema } from "avsc";
 
 // Paginated Chunk of compressed data with a type defined for the data post decompression
-export default {
+const schema: Schema = {
   type: "record",
   name: "UserPublicFollowsChunk",
   namespace: "org.dsnp",
@@ -21,3 +22,5 @@ export default {
     },
   ],
 };
+
+export default schema;

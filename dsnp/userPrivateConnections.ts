@@ -1,7 +1,8 @@
 import { UserDataType, descriptorForUserDataType } from "@dsnp/schemas";
+import type { Schema } from "avsc";
 
 // Paginated Chunk with PRIds
-export default {
+const schema: Schema = {
   type: "record",
   name: "UserPrivateConnectionsChunk",
   namespace: "org.dsnp",
@@ -35,3 +36,5 @@ export default {
     },
   ],
 };
+
+export default schema;

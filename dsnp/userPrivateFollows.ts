@@ -1,7 +1,8 @@
 import { UserDataType, descriptorForUserDataType } from "@dsnp/schemas";
+import type { Schema } from "avsc";
 
 // Paginated Chunks
-export default {
+const schema: Schema = {
   type: "record",
   name: "UserPrivateFollowsChunk",
   namespace: "org.dsnp",
@@ -27,3 +28,5 @@ export default {
     },
   ],
 };
+
+export default schema;

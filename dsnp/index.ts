@@ -1,6 +1,6 @@
 import { ApiPromise } from "@polkadot/api";
 
-import { Schema } from "avsc";
+import type { Schema } from "avsc";
 import { DSNPParquetSchema } from "@dsnp/schemas/types/dsnp-parquet.js";
 import {
   AnnouncementType,
@@ -137,7 +137,7 @@ export const schemas = new Map<SchemaName, Deploy>([
   [
     "public-key-key-agreement",
     {
-      model: publicKey as Schema,
+      model: publicKey,
       modelType: "AvroBinary",
       payloadLocation: "Itemized",
       settings: ["AppendOnly", "SignatureRequired"],
@@ -147,7 +147,7 @@ export const schemas = new Map<SchemaName, Deploy>([
   [
     "public-follows",
     {
-      model: userPublicFollows as Schema,
+      model: userPublicFollows,
       modelType: "AvroBinary",
       payloadLocation: "Paginated",
       settings: [],
@@ -157,7 +157,7 @@ export const schemas = new Map<SchemaName, Deploy>([
   [
     "private-follows",
     {
-      model: userPrivateFollows as Schema,
+      model: userPrivateFollows,
       modelType: "AvroBinary",
       payloadLocation: "Paginated",
       settings: [],
@@ -167,7 +167,7 @@ export const schemas = new Map<SchemaName, Deploy>([
   [
     "private-connections",
     {
-      model: userPrivateConnections as Schema,
+      model: userPrivateConnections,
       modelType: "AvroBinary",
       payloadLocation: "Paginated",
       settings: [],
@@ -177,7 +177,7 @@ export const schemas = new Map<SchemaName, Deploy>([
   [
     "public-key-assertion-method",
     {
-      model: publicKey as Schema,
+      model: publicKey,
       modelType: "AvroBinary",
       payloadLocation: "Itemized",
       settings: ["AppendOnly", "SignatureRequired"],
@@ -187,7 +187,7 @@ export const schemas = new Map<SchemaName, Deploy>([
   [
     "profile-resources",
     {
-      model: profile as Schema,
+      model: profile,
       modelType: "AvroBinary",
       payloadLocation: "Itemized",
       settings: [],
