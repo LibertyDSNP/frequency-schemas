@@ -2,7 +2,12 @@ import { ApiPromise } from "@polkadot/api";
 
 import { Schema } from "avsc";
 import { DSNPParquetSchema } from "@dsnp/schemas/types/dsnp-parquet.js";
-import { AnnouncementType, descriptorForAnnouncementType, UserDataType, descriptorForUserDataType } from "@dsnp/schemas";
+import {
+  AnnouncementType,
+  descriptorForAnnouncementType,
+  UserDataType,
+  descriptorForUserDataType,
+} from "@dsnp/schemas";
 
 import userPublicFollows from "./userPublicFollows.js";
 import userPrivateFollows from "./userPrivateFollows.js";
@@ -213,7 +218,7 @@ chainMapping[GENESIS_HASH_TESTNET_PASEO] = {
   "private-follows": { "1.2": 9 },
   "private-connections": { "1.2": 10 },
   "public-key-assertion-method": { "1.3": 11 },
-//  "profile-resources": { "1.3": TBD },
+  //  "profile-resources": { "1.3": TBD },
 };
 chainMapping[GENESIS_HASH_MAINNET] = {
   tombstone: { "1.2": 1 },
@@ -226,8 +231,8 @@ chainMapping[GENESIS_HASH_MAINNET] = {
   "public-follows": { "1.2": 8 },
   "private-follows": { "1.2": 9 },
   "private-connections": { "1.2": 10 },
-//  "public-key-assertion-method": { "1.3": TBD },
-//  "profile-resources": { "1.3": TBD },
+  //  "public-key-assertion-method": { "1.3": TBD },
+  //  "profile-resources": { "1.3": TBD },
 };
 /*
  * Schema in "default" deployments (e.g. to a clean local chain) are
