@@ -28,7 +28,7 @@
   "homepage": "https://github.com/LibertyDSNP/schemas#readme",
   "dependencies": {
     "@dsnp/schemas": "^0.0.3",
-    "@frequency-chain/api-augment": "^1.10.0",
+    "@frequency-chain/api-augment": "^1.11.0",
     "@polkadot/api": "^10.7.3",
     "json-stringify-pretty-compact": "^4.0.0",
     "ts-node": "^10.9.2",
