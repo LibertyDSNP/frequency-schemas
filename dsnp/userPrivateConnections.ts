@@ -1,5 +1,8 @@
+import { UserDataType, descriptorForUserDataType } from "@dsnp/schemas";
+import type { Schema } from "avsc";
+
 // Paginated Chunk with PRIds
-export default {
+const schema: Schema = {
   type: "record",
   name: "UserPrivateConnectionsChunk",
   namespace: "org.dsnp",
@@ -14,12 +17,7 @@ export default {
       name: "pridList",
       type: {
         type: "array",
-        items: {
-          name: "prid",
-          type: "fixed",
-          size: 8,
-          doc: "Pseudonymous Relationship Identifier",
-        },
+        items: descriptorForUserDataType(UserDataType.PrivateConnectionPRIds).avroSchema,
       },
     },
     {
@@ -34,22 +32,9 @@ export default {
       type: "array",
       name: "PrivateGraph",
       namespace: "org.dsnp",
-      items: {
-        type: "record",
-        name: "GraphEdge",
-        fields: [
-          {
-            name: "userId",
-            type: "long",
-            doc: "DSNP User Id of object of relationship",
-          },
-          {
-            name: "since",
-            type: "long",
-            doc: "Unix epoch in seconds when this relationship was originally established rounded to the nearest 1000",
-          },
-        ],
-      },
+      items: descriptorForUserDataType(UserDataType.PrivateConnections).avroSchema,
     },
   ],
 };
+
+export default schema;

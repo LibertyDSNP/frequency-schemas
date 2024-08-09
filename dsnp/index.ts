@@ -1,19 +1,26 @@
 import { ApiPromise } from "@polkadot/api";
 
-import { FrequencyParquetSchema } from "../types/frequency.js";
+import type { Schema } from "avsc";
+import { DSNPParquetSchema } from "@dsnp/schemas/types/dsnp-parquet.js";
+import {
+  AnnouncementType,
+  descriptorForAnnouncementType,
+  UserDataType,
+  descriptorForUserDataType,
+} from "@dsnp/schemas";
 
-import broadcast from "./broadcast.js";
-// Deprecated
-// import graphChange from "./dsnp/graphChange.js";
-import profile from "./profile.js";
-import reaction from "./reaction.js";
-import reply from "./reply.js";
-import tombstone from "./tombstone.js";
-import publicKey from "./publicKey.js";
 import userPublicFollows from "./userPublicFollows.js";
 import userPrivateFollows from "./userPrivateFollows.js";
 import userPrivateConnections from "./userPrivateConnections.js";
-import update from "./update.js";
+
+const broadcast = descriptorForAnnouncementType(AnnouncementType.Broadcast).parquetSchema;
+const reaction = descriptorForAnnouncementType(AnnouncementType.Reaction).parquetSchema;
+const reply = descriptorForAnnouncementType(AnnouncementType.Reply).parquetSchema;
+const tombstone = descriptorForAnnouncementType(AnnouncementType.Tombstone).parquetSchema;
+const update = descriptorForAnnouncementType(AnnouncementType.Update).parquetSchema;
+
+const profile = descriptorForUserDataType(UserDataType.ProfileResources).avroSchema;
+const publicKey = descriptorForUserDataType(UserDataType.KeyAgreementPublicKeys).avroSchema;
 
 export {
   broadcast,
@@ -45,7 +52,7 @@ type Settings = "AppendOnly" | "SignatureRequired";
 export type DSNPVersion = "1.1" | "1.2" | "1.3";
 
 type ParquetDeploy = {
-  model: FrequencyParquetSchema;
+  model: DSNPParquetSchema;
   modelType: "Parquet";
   payloadLocation: "IPFS";
   settings: [];
@@ -53,7 +60,7 @@ type ParquetDeploy = {
 };
 
 type AvroDeploy = {
-  model: object;
+  model: Schema;
   modelType: "AvroBinary";
   payloadLocation: PayloadLocation;
   settings: Settings[];
@@ -62,13 +69,14 @@ type AvroDeploy = {
 
 export type Deploy = ParquetDeploy | AvroDeploy;
 
-export type ParquetSchemaName = "broadcast" | "profile" | "reaction" | "reply" | "tombstone" | "update";
+export type ParquetSchemaName = "broadcast" | "reaction" | "reply" | "tombstone" | "update";
 export type AvroSchemaName =
   | "public-key-key-agreement"
   | "public-key-assertion-method"
   | "public-follows"
   | "private-follows"
-  | "private-connections";
+  | "private-connections"
+  | "profile-resources";
 
 export type SchemaName = ParquetSchemaName | AvroSchemaName;
 
@@ -114,16 +122,6 @@ export const schemas = new Map<SchemaName, Deploy>([
       payloadLocation: "IPFS",
       settings: [],
       dsnpVersion: "1.1",
-    },
-  ],
-  [
-    "profile",
-    {
-      model: profile,
-      modelType: "Parquet",
-      payloadLocation: "IPFS",
-      settings: [],
-      dsnpVersion: "1.2",
     },
   ],
   [
@@ -186,6 +184,16 @@ export const schemas = new Map<SchemaName, Deploy>([
       dsnpVersion: "1.3",
     },
   ],
+  [
+    "profile-resources",
+    {
+      model: profile,
+      modelType: "AvroBinary",
+      payloadLocation: "Itemized",
+      settings: [],
+      dsnpVersion: "1.3",
+    },
+  ],
 ]);
 
 export const getSchema = (name: SchemaName): Deploy | null => {
@@ -204,13 +212,13 @@ chainMapping[GENESIS_HASH_TESTNET_PASEO] = {
   broadcast: { "1.2": 2 },
   reply: { "1.2": 3 },
   reaction: { "1.1": 4 },
-  profile: { "1.2": 6 },
   update: { "1.2": 5 },
   "public-key-key-agreement": { "1.2": 7 },
   "public-follows": { "1.2": 8 },
   "private-follows": { "1.2": 9 },
   "private-connections": { "1.2": 10 },
   "public-key-assertion-method": { "1.3": 11 },
+  //  "profile-resources": { "1.3": TBD },
 };
 chainMapping[GENESIS_HASH_MAINNET] = {
   tombstone: { "1.2": 1 },
@@ -223,7 +231,8 @@ chainMapping[GENESIS_HASH_MAINNET] = {
   "public-follows": { "1.2": 8 },
   "private-follows": { "1.2": 9 },
   "private-connections": { "1.2": 10 },
-  // TBD "public-key-assertion-method": { "1.3": 11? },
+  //  "public-key-assertion-method": { "1.3": TBD },
+  //  "profile-resources": { "1.3": TBD },
 };
 /*
  * Schema in "default" deployments (e.g. to a clean local chain) are
@@ -243,6 +252,7 @@ chainMapping["default"] = {
   "private-follows": { "1.2": 9 },
   "private-connections": { "1.2": 10 },
   "public-key-assertion-method": { "1.3": 11 },
+  "profile-resources": { "1.3": 12 },
 };
 
 /**

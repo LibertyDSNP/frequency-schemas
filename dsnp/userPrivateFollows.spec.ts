@@ -1,5 +1,6 @@
 import privateFollowsSchema from "./userPrivateFollows.js";
 import avro from "avro-js";
+import type { Schema } from "avsc";
 
 describe("Private Follows Schema", () => {
   it("Is Avro", () => {
@@ -11,7 +12,7 @@ describe("Private Follows Schema", () => {
     // Parse the inside and outside types.
     // The inside type must be self contained.
     const outsideType = avro.parse(privateFollowsSchema);
-    const insideType = avro.parse(privateFollowsSchema.types[0]);
+    const insideType = avro.parse((privateFollowsSchema as Schema & { types: Schema[] }).types[0]);
 
     // Generate a random inside type
     const inside = insideType.random();

@@ -1,5 +1,6 @@
 import privateConnectionsSchema from "./userPrivateConnections.js";
 import avro from "avro-js";
+import type { Schema } from "avsc";
 
 describe("Private Connections Schema", () => {
   it("Is Avro", () => {
@@ -11,7 +12,7 @@ describe("Private Connections Schema", () => {
     // Parse the inside and outside types.
     // The inside type must be self contained.
     const outsideType = avro.parse(privateConnectionsSchema);
-    const insideType = avro.parse(privateConnectionsSchema.types[0]);
+    const insideType = avro.parse((privateConnectionsSchema as Schema & { types: Schema[] }).types[0]);
 
     // Generate a random inside type
     const inside = insideType.random();
