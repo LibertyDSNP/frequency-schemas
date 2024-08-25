@@ -218,7 +218,7 @@ chainMapping[GENESIS_HASH_TESTNET_PASEO] = {
   "private-follows": { "1.2": 9 },
   "private-connections": { "1.2": 10 },
   "public-key-assertion-method": { "1.3": 11 },
-  //  "profile-resources": { "1.3": TBD },
+  "profile-resources": { "1.3": 570 },
 };
 chainMapping[GENESIS_HASH_MAINNET] = {
   tombstone: { "1.2": 1 },
@@ -234,24 +234,12 @@ chainMapping[GENESIS_HASH_MAINNET] = {
   //  "profile-resources": { "1.3": TBD },
 };
 /*
- * Schema in "default" deployments (e.g. to a clean local chain) are
- * numbered according to the `schemas` array (beginning with 1).  If
- * you have a non-standard deployment, call `setSchemaMapping()`
- * manually.
+ * Schemas in "default" deployments (e.g. to a clean local node) are
+ * generally the same as mainnet. As schemas are approved on mainnet
+ * they will be added to the Frequency source code in
+ * https://github.com/frequency-chain/frequency/blob/main/resources/genesis-schemas.json.
  */
-chainMapping["default"] = {
-  tombstone: { "1.2": 1 },
-  broadcast: { "1.2": 2 },
-  reply: { "1.2": 3 },
-  reaction: { "1.1": 4 },
-  update: { "1.2": 5 },
-  "public-key-key-agreement": { "1.2": 6 },
-  "public-follows": { "1.2": 7 },
-  "private-follows": { "1.2": 8 },
-  "private-connections": { "1.2": 9 },
-  "public-key-assertion-method": { "1.3": 10 },
-  "profile-resources": { "1.3": 11 },
-};
+chainMapping["default"] = JSON.parse(JSON.stringify(chainMapping[GENESIS_HASH_MAINNET]));
 
 /**
  * Gets the schemaId from the Frequency instance configured for
