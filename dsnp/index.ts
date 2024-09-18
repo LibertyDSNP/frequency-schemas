@@ -18,6 +18,11 @@ const reaction = descriptorForAnnouncementType(AnnouncementType.Reaction).parque
 const reply = descriptorForAnnouncementType(AnnouncementType.Reply).parquetSchema;
 const tombstone = descriptorForAnnouncementType(AnnouncementType.Tombstone).parquetSchema;
 const update = descriptorForAnnouncementType(AnnouncementType.Update).parquetSchema;
+const userAttributeSet = descriptorForAnnouncementType(AnnouncementType.Update).parquetSchema;
+const dsnpContentAttributeSet = descriptorForAnnouncementType(AnnouncementType.DSNPContentAttributeSet).parquetSchema;
+const externalContentAttributeSet = descriptorForAnnouncementType(
+  AnnouncementType.ExternalContentAttributeSet,
+).parquetSchema;
 
 const profile = descriptorForUserDataType(UserDataType.ProfileResources).avroSchema;
 const publicKey = descriptorForUserDataType(UserDataType.KeyAgreementPublicKeys).avroSchema;
@@ -69,7 +74,15 @@ type AvroDeploy = {
 
 export type Deploy = ParquetDeploy | AvroDeploy;
 
-export type ParquetSchemaName = "broadcast" | "reaction" | "reply" | "tombstone" | "update";
+export type ParquetSchemaName =
+  | "broadcast"
+  | "reaction"
+  | "reply"
+  | "tombstone"
+  | "update"
+  | "user-attribute-set"
+  | "dsnp-content-attribute-set"
+  | "ext-content-attribute-set";
 export type AvroSchemaName =
   | "public-key-key-agreement"
   | "public-key-assertion-method"
@@ -194,6 +207,36 @@ export const schemas = new Map<SchemaName, Deploy>([
       dsnpVersion: "1.3",
     },
   ],
+  [
+    "user-attribute-set",
+    {
+      model: userAttributeSet,
+      modelType: "Parquet",
+      payloadLocation: "IPFS",
+      settings: [],
+      dsnpVersion: "1.3",
+    },
+  ],
+  [
+    "dsnp-content-attribute-set",
+    {
+      model: dsnpContentAttributeSet,
+      modelType: "Parquet",
+      payloadLocation: "IPFS",
+      settings: [],
+      dsnpVersion: "1.3",
+    },
+  ],
+  [
+    "ext-content-attribute-set",
+    {
+      model: externalContentAttributeSet,
+      modelType: "Parquet",
+      payloadLocation: "IPFS",
+      settings: [],
+      dsnpVersion: "1.3",
+    },
+  ],
 ]);
 
 export const getSchema = (name: SchemaName): Deploy | null => {
@@ -219,6 +262,9 @@ chainMapping[GENESIS_HASH_TESTNET_PASEO] = {
   "private-connections": { "1.2": 10 },
   "public-key-assertion-method": { "1.3": 11 },
   "profile-resources": { "1.3": 570 },
+  "user-attribute-set": { "1.3": 579 },
+  "dsnp-content-attribute-set": { "1.3": 580 },
+  "ext-content-attribute-set": { "1.3": 581 },
 };
 chainMapping[GENESIS_HASH_MAINNET] = {
   tombstone: { "1.2": 1 },
@@ -232,6 +278,9 @@ chainMapping[GENESIS_HASH_MAINNET] = {
   "private-connections": { "1.2": 10 },
   //  "public-key-assertion-method": { "1.3": TBD },
   //  "profile-resources": { "1.3": TBD },
+  //  "user-attribute-set": { "1.3": TBD },
+  //  "dsnp-content-attribute-set": { "1.3": TBD },
+  //  "ext-content-attribute-set": { "1.3": TBD },
 };
 /*
  * Schemas in "default" deployments (e.g. to a clean local node) are
