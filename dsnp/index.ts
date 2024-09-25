@@ -265,7 +265,7 @@ chainMapping[GENESIS_HASH_MAINNET] = {
   "public-follows": { "1.2": 8 },
   "private-follows": { "1.2": 9 },
   "private-connections": { "1.2": 10 },
-  "user-attribute-set": { "1.3": 11 }, // this will become 20
+  "user-attribute-set": { "1.3": 20 },
   "dsnp-content-attribute-set": { "1.3": 12 },
   "ext-content-attribute-set": { "1.3": 13 },
   "public-key-assertion-method": { "1.3": 14 },
