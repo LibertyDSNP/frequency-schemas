@@ -18,6 +18,11 @@ const reaction = descriptorForAnnouncementType(AnnouncementType.Reaction).parque
 const reply = descriptorForAnnouncementType(AnnouncementType.Reply).parquetSchema;
 const tombstone = descriptorForAnnouncementType(AnnouncementType.Tombstone).parquetSchema;
 const update = descriptorForAnnouncementType(AnnouncementType.Update).parquetSchema;
+const userAttributeSet = descriptorForAnnouncementType(AnnouncementType.UserAttributeSet).parquetSchema;
+const dsnpContentAttributeSet = descriptorForAnnouncementType(AnnouncementType.DSNPContentAttributeSet).parquetSchema;
+const externalContentAttributeSet = descriptorForAnnouncementType(
+  AnnouncementType.ExternalContentAttributeSet,
+).parquetSchema;
 
 const profile = descriptorForUserDataType(UserDataType.ProfileResources).avroSchema;
 const publicKey = descriptorForUserDataType(UserDataType.KeyAgreementPublicKeys).avroSchema;
@@ -69,7 +74,15 @@ type AvroDeploy = {
 
 export type Deploy = ParquetDeploy | AvroDeploy;
 
-export type ParquetSchemaName = "broadcast" | "reaction" | "reply" | "tombstone" | "update";
+export type ParquetSchemaName =
+  | "broadcast"
+  | "reaction"
+  | "reply"
+  | "tombstone"
+  | "update"
+  | "user-attribute-set"
+  | "dsnp-content-attribute-set"
+  | "ext-content-attribute-set";
 export type AvroSchemaName =
   | "public-key-key-agreement"
   | "public-key-assertion-method"
@@ -91,7 +104,7 @@ export const schemas = new Map<SchemaName, Deploy>([
       modelType: "Parquet",
       payloadLocation: "IPFS",
       settings: [],
-      dsnpVersion: "1.2",
+      dsnpVersion: "1.3",
     },
   ],
   [
@@ -101,7 +114,7 @@ export const schemas = new Map<SchemaName, Deploy>([
       modelType: "Parquet",
       payloadLocation: "IPFS",
       settings: [],
-      dsnpVersion: "1.2",
+      dsnpVersion: "1.3",
     },
   ],
   [
@@ -111,7 +124,7 @@ export const schemas = new Map<SchemaName, Deploy>([
       modelType: "Parquet",
       payloadLocation: "IPFS",
       settings: [],
-      dsnpVersion: "1.2",
+      dsnpVersion: "1.3",
     },
   ],
   [
@@ -131,7 +144,7 @@ export const schemas = new Map<SchemaName, Deploy>([
       modelType: "Parquet",
       payloadLocation: "IPFS",
       settings: [],
-      dsnpVersion: "1.2",
+      dsnpVersion: "1.3",
     },
   ],
   [
@@ -194,6 +207,36 @@ export const schemas = new Map<SchemaName, Deploy>([
       dsnpVersion: "1.3",
     },
   ],
+  [
+    "user-attribute-set",
+    {
+      model: userAttributeSet,
+      modelType: "Parquet",
+      payloadLocation: "IPFS",
+      settings: [],
+      dsnpVersion: "1.3",
+    },
+  ],
+  [
+    "dsnp-content-attribute-set",
+    {
+      model: dsnpContentAttributeSet,
+      modelType: "Parquet",
+      payloadLocation: "IPFS",
+      settings: [],
+      dsnpVersion: "1.3",
+    },
+  ],
+  [
+    "ext-content-attribute-set",
+    {
+      model: externalContentAttributeSet,
+      modelType: "Parquet",
+      payloadLocation: "IPFS",
+      settings: [],
+      dsnpVersion: "1.3",
+    },
+  ],
 ]);
 
 export const getSchema = (name: SchemaName): Deploy | null => {
@@ -207,39 +250,37 @@ const chainMapping: { [genesisHash: string]: SchemaMapping } = {};
 export const GENESIS_HASH_TESTNET_PASEO = "0x203c6838fc78ea3660a2f298a58d859519c72a5efdc0f194abd6f0d5ce1838e0";
 export const GENESIS_HASH_MAINNET = "0x4a587bf17a404e3572747add7aab7bbe56e805a5479c6c436f07f36fcc8d3ae1";
 
-chainMapping[GENESIS_HASH_TESTNET_PASEO] = {
-  tombstone: { "1.2": 1 },
-  broadcast: { "1.2": 2 },
-  reply: { "1.2": 3 },
-  reaction: { "1.1": 4 },
-  update: { "1.2": 6 },
-  "public-key-key-agreement": { "1.2": 7 },
-  "public-follows": { "1.2": 8 },
-  "private-follows": { "1.2": 9 },
-  "private-connections": { "1.2": 10 },
-  "public-key-assertion-method": { "1.3": 11 },
-  "profile-resources": { "1.3": 570 },
-};
-chainMapping[GENESIS_HASH_MAINNET] = {
-  tombstone: { "1.2": 1 },
-  broadcast: { "1.2": 2 },
-  reply: { "1.2": 3 },
-  reaction: { "1.1": 4 },
-  update: { "1.2": 5 },
-  "public-key-key-agreement": { "1.2": 7 },
-  "public-follows": { "1.2": 8 },
-  "private-follows": { "1.2": 9 },
-  "private-connections": { "1.2": 10 },
-  //  "public-key-assertion-method": { "1.3": TBD },
-  //  "profile-resources": { "1.3": TBD },
-};
 /*
- * Schemas in "default" deployments (e.g. to a clean local node) are
- * generally the same as mainnet. As schemas are approved on mainnet
- * they will be added to the Frequency source code in
- * https://github.com/frequency-chain/frequency/blob/main/resources/genesis-schemas.json.
+ * As schemas are approved on mainnet they will be added to the Frequency source code in
+ * https://github.com/frequency-chain/frequency/blob/main/resources/genesis-schemas.json
+ * and also backported so that testnet contains all approved schemas.
  */
-chainMapping["default"] = JSON.parse(JSON.stringify(chainMapping[GENESIS_HASH_MAINNET]));
+chainMapping[GENESIS_HASH_MAINNET] = {
+  tombstone: { "1.2": 1, "1.3": 16 },
+  broadcast: { "1.2": 2, "1.3": 17 },
+  reply: { "1.2": 3, "1.3": 18 },
+  reaction: { "1.1": 4 },
+  update: { "1.2": 5, "1.3": 19 },
+  "public-key-key-agreement": { "1.2": 7 },
+  "public-follows": { "1.2": 8 },
+  "private-follows": { "1.2": 9 },
+  "private-connections": { "1.2": 10 },
+  "user-attribute-set": { "1.3": 20 },
+  "dsnp-content-attribute-set": { "1.3": 12 },
+  "ext-content-attribute-set": { "1.3": 13 },
+  "public-key-assertion-method": { "1.3": 14 },
+  "profile-resources": { "1.3": 15 },
+};
+
+// Schemas that exist on testnet but not yet on mainnet should be appended here
+chainMapping[GENESIS_HASH_TESTNET_PASEO] = {
+  ...chainMapping[GENESIS_HASH_MAINNET],
+};
+
+// Schemas that exist only on a local/development chain should be appended here
+chainMapping["default"] = {
+  ...chainMapping[GENESIS_HASH_MAINNET],
+};
 
 /**
  * Gets the schemaId from the Frequency instance configured for

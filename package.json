@@ -27,9 +27,9 @@
   },
   "homepage": "https://github.com/LibertyDSNP/schemas#readme",
   "dependencies": {
-    "@dsnp/schemas": "^0.0.3",
-    "@frequency-chain/api-augment": "^1.13.0-rc3",
-    "@polkadot/api": "^12.3.1",
+    "@dsnp/schemas": "^1.3.1",
+    "@frequency-chain/api-augment": "^1.13.1",
+    "@polkadot/api": "^13.0.1",
     "json-stringify-pretty-compact": "^4.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
@@ -40,7 +40,7 @@
   "devDependencies": {
     "@dsnp/parquetjs": "^1.3.5",
     "@dsnp/test-generators": "^0.1.0",
-    "@polkadot/types": "^12.3.1",
+    "@polkadot/types": "^13.0.1",
     "@types/jest": "^29.5.11",
     "@typescript-eslint/eslint-plugin": "^6.17.0",
     "@typescript-eslint/parser": "^6.17.0",
