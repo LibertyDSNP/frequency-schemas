@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "test": "jest",
-    "deploy": "node --loader ts-node/esm cli/index.ts",
-    "read": "node --loader ts-node/esm cli/read.ts",
-    "find": "node --loader ts-node/esm cli/find.ts",
+    "deploy": "node --loader ts-node/esm --no-warnings cli/index.ts",
+    "read": "node --loader ts-node/esm --no-warnings cli/read.ts",
+    "find": "node --loader ts-node/esm --no-warnings cli/find.ts",
     "clean": "rm -Rf dist",
     "format": "tsc -p ./tsconfig.eslint.json --noEmit --pretty && eslint --fix \"**/*.ts\"",
     "lint": "tsc -p ./tsconfig.eslint.json --noEmit --pretty && eslint \"**/*.ts\"",
@@ -30,6 +30,7 @@
     "@dsnp/schemas": "^1.3.1",
     "@frequency-chain/api-augment": "^1.13.1",
     "@polkadot/api": "^13.0.1",
+    "@polkadot/util": "^13.1.1",
     "json-stringify-pretty-compact": "^4.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"

@@ -9,7 +9,8 @@ export const deploy = async () => {
   let schemaNames: string[];
 
   if (args.length == 0) {
-    schemaNames = [...dsnp.schemas.keys()];
+    console.log("Deploying all schemas is no longer supported. Deploy schemas individually.");
+    process.exit(1);
   } else if (args.length > 0 && args.includes("help")) {
     console.log(
       [
@@ -19,7 +20,7 @@ export const deploy = async () => {
         "- DEPLOY_SCHEMA_ACCOUNT_URI",
         "- DEPLOY_SCHEMA_ENDPOINT_URL",
         "",
-        'Example: DEPLOY_SCHEMA_ACCOUNT_URI="//Bob" DEPLOY_SCHEMA_ENDPOINT_URL="ws://127.0.0.1:9944" npm run deploy',
+        'Example: DEPLOY_SCHEMA_ACCOUNT_URI="//Bob" DEPLOY_SCHEMA_ENDPOINT_URL="ws://127.0.0.1:9944" npm run deploy schema-name',
         "",
       ].join("\n"),
     );
@@ -36,7 +37,7 @@ export const deploy = async () => {
       schemaNames = [schemaName];
     }
   } else {
-    console.error("ERROR: You can only specify a single schema to create or all schemas if not specified.");
+    console.error("ERROR: You can only specify a single schema to create.");
     process.exit(1);
   }
 
