@@ -1,6 +1,6 @@
 # Official DSNP over Frequency Schemas
 
-**Matching DSNP Version: v1.2.0**
+**Matching DSNP Version: v1.3.0**
 
 ## Use Schemas as Library
 
@@ -9,7 +9,7 @@
 npm install @dsnp/frequency-schemas
 ```
 
-### Use Schema
+### Use Parquet or Avro Schema
 
 ```typescript
 import { dsnp } from "@dsnp/frequency-schemas";
@@ -17,7 +17,7 @@ import { dsnp } from "@dsnp/frequency-schemas";
 console.log(dsnp.getSchema("broadcast"));
 ```
 
-### Get Schema Id from Chain
+### Get Schema Id for Connected Chain
 
 ```typescript
 import { dsnp } from "@dsnp/frequency-schemas";
@@ -27,8 +27,10 @@ const api = ApiPromise.create(/* ... */);
 console.log(await dsnp.getSchemaId(api, "broadcast"));
 ```
 
-Frequency mainnet and testnet have well-known Ids defined in `dsnp/index.ts`.
-Other configurations default to assuming `npm run deploy` has been run on a fresh chain (which is usually the case for a localhost instance), but can be overridden:
+The API connection is used only to identify the chain by its genesis hash.
+
+Frequency chains have well-known Ids defined in `dsnp/index.ts`.
+However, it is possible to configure a custom mapping if needed:
 
 ```
 dsnp.setSchemaMapping(api.genesisHash.toString(), {
@@ -71,11 +73,11 @@ await writer.close();
 
 ## Usage
 
-### To deploy/register all schemas
+### To register a single schema
 
-```sh
-npm run deploy
-```
+e.g. To register the "profile-resources" schema
+
+    npm run deploy profile-resources
 
 by default it will deploy to the `localhost` node on port 9944 using the Alice sudo test account.
 
@@ -91,12 +93,6 @@ e.g.
 ```sh
 DEPLOY_SCHEMA_ACCOUNT_URI="//Bob" DEPLOY_SCHEMA_ENDPOINT_URL="ws://127.0.0.1:9944" npm run deploy profile-resources
 ```
-
-### To register a single schema
-
-e.g. To register the "profile-resources" schema
-
-    npm run deploy profile-resources
 
 **Note:** Requires a sudo key if deploying to a testnet.
 Mainnet will use the proposal system (`proposeToCreateSchema`).
@@ -181,31 +177,3 @@ This script will look up and verify schemas in the schema registry that match th
 ```sh
 DEPLOY_SCHEMA_ENDPOINT_URL="ws://127.0.0.1:9944" npm run find
 ```
-
-## Use with Docker
-
-This repo deploys `dsnp/instant-seal-node-with-deployed-schemas` to Docker Hub.
-It is based on a [Frequency Standalone Docker](https://hub.docker.com/r/frequencychain/standalone-node) with the schemas automatically deployed on top of it with the image defaults including using "instant sealing" mode.
-
-Note: `--platform=linux/amd64` is because as `frequencychain` images are only published for the `linux/amd64` platform.
-
-### Run Locally
-For any local testing do the following:
-1. `docker pull --platform=linux/amd64 dsnp/instant-seal-node-with-deployed-schemas:latest`
-2. `docker run  --platform=linux/amd64 --rm -p 9944:9944 dsnp/instant-seal-node-with-deployed-schemas:latest`
-
-### Build Locally
-1. `docker build --platform=linux/amd64 -t dsnp/instant-seal-node-with-deployed-schemas:latest -t dsnp/instant-seal-node-with-deployed-schemas:<versionNumberHere> .`
-
-### Pushing Docker Image
-
-To match with the Frequency version, a new tag should be pushed to update the docker version of this image each time frequency releases a new version.
-The following steps explain how to properly do a release for this.
-1. Go to the [Frequency repo](https://github.com/frequency-chain/frequency/releases) to see what the latest release version is.
-2. In this repo, check that main is properly [passing its tests and building here](https://github.com/LibertyDSNP/schemas/actions)
-3. Go to main: `git checkout main && git pull --rebase`
-4. Make sure to pull all latest tags as well: `git pull --tags`
-5. Tag the build to match the frequency version but appended with "docker/": `git tag docker/{insert version number}`. For example, if the version number is v1.0.0, then the tag should be `docker/v1.0.0`
-Push the tag up: `git push --tags`
-6. Monitor the [build](https://github.com/LibertyDSNP/schemas/actions)
-7. When that finishes successfully, check [Docker Hub](https://hub.docker.com/r/dsnp/instant-seal-node-with-deployed-schemas/tags) to verify that the image was pushed up
