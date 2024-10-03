@@ -1,5 +1,3 @@
-import { ApiPromise } from "@polkadot/api";
-
 import type { Schema } from "avsc";
 import { DSNPParquetSchema } from "@dsnp/schemas/types/dsnp-parquet.js";
 import {
@@ -283,19 +281,14 @@ chainMapping["default"] = {
 };
 
 /**
- * Gets the schemaId from the Frequency instance configured for
- * apiPromise for the given DSNP type and version. If version is
- * unspecified, the latest version is returned. (You probably only
- * need version if you're migrating.)
+ * Gets the schemaId for for given DSNP type and version and genesis hash.
+ * If version is unspecified, the latest version is returned. (You probably
+ * only need version if you're migrating.)
+ * If genesis hash is unspecified, the mainnet genesis hash and schema
+ * numbers will be used.
  */
-export const getSchemaId = async (
-  apiPromise: Promise<ApiPromise>,
-  schemaName: SchemaName,
-  dsnpVersion?: DSNPVersion,
-): Promise<number> => {
-  const api = await apiPromise;
-  const genesisHash = api.genesisHash.toString();
-  let mapping = chainMapping[genesisHash];
+export const getSchemaId = (schemaName: SchemaName, dsnpVersion?: DSNPVersion, genesisHash?: string): number => {
+  let mapping = chainMapping[genesisHash || GENESIS_HASH_MAINNET];
   // If we don't recognize this chain, use default mapping
   if (!mapping) mapping = chainMapping["default"];
   const versions = mapping[schemaName];

@@ -24,7 +24,7 @@ import { dsnp } from "@dsnp/frequency-schemas";
 import { ApiPromise } from "@polkadot/api";
 
 const api = ApiPromise.create(/* ... */);
-console.log(await dsnp.getSchemaId(api, "broadcast"));
+console.log(dsnp.getSchemaId("broadcast", "1.3", api.genesisHash.toString()));
 ```
 
 The API connection is used only to identify the chain by its genesis hash.
@@ -40,7 +40,7 @@ dsnp.setSchemaMapping(api.genesisHash.toString(), {
   // ...
 });
 
-console.log(await dsnp.getSchemaId(api, "broadcast")); // yields 67
+console.log(dsnp.getSchemaId("broadcast", "1.2", api.genesisHash.toString())); // yields 67
 ```
 
 ### With Parquet Writer
