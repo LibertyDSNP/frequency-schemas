@@ -55,7 +55,7 @@ import { ParquetWriter } from "@dsnp/parquetjs";
 
 const [parquetSchema, writerOptions] = parquet.fromFrequencySchema("broadcast");
 const writer = await ParquetWriter.openFile(parquetSchema, "./file.parquet", writerOptions);
-writer.appendRow({
+await writer.appendRow({
   announcementType: 2,
   contentHash: "0x1234567890abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
   fromId: 78187493520,
